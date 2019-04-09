@@ -10,6 +10,7 @@ Reports:
 - [Proposal](proposal.html)
 - [Status](status.html)
 - [Final](final.html)
+- [Team](https://jeffomidvaran.github.io/group9_cs175_minecraft/team)
 
 What's Markdown (`.md`)?
 
