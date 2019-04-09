@@ -4,17 +4,18 @@ title:  Proposal
 ---
 
 ## Summary of the Project
-
-fill in the summary here
-
+main idea
+problem setup
+input/output
 
 ## AI/ML Algorithms
-
-
-fill in the algorithms here
+reinforcement learning
+deep learning for object recognition   
 
 
 ## Evaluation Plan
+paragraph 1
+    how do we measure success? (metrics, baselines)
 
-
-fill in evaluation plan here
+paragraph 2
+    how will we verfiy that the project works
