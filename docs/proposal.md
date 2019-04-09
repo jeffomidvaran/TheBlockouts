@@ -9,13 +9,17 @@ problem setup
 input/output
 
 ## AI/ML Algorithms
-reinforcement learning
+reinforcement learning <br/>
 deep learning for object recognition   
 
 
 ## Evaluation Plan
-paragraph 1
-    how do we measure success? (metrics, baselines)
+paragraph 1 <br/>
+    +how do we measure success? (metrics, baselines)
 
-paragraph 2
-    how will we verfiy that the project works
+paragraph 2<br/>
+    +how will we verfiy that the project works
+
+## Appointment with the Instructor
+make appointment on 4/23
+https://calendly.com/sameersingh/office-hours
