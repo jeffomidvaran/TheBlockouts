@@ -3,7 +3,7 @@ layout: default
 title:  Home
 ---
 
-Source code: https://jeffomidvaran.github.io/group9_cs175_minecraft/proposal
+Source code: https://jeffomidvaran.github.io/group9_cs175_minecraft/
 
 Reports:
 
