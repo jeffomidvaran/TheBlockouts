@@ -3,14 +3,14 @@ layout: default
 title:  Home
 ---
 
-Source code: https://github.com/USER/PROJECT (_fix this_)
+Source code: https://jeffomidvaran.github.io/group9_cs175_minecraft/proposal
 
 Reports:
 
-- [Proposal](proposal.html)
+- [Proposal](https://jeffomidvaran.github.io/group9_cs175_minecraft/proposal)
 - [Status](status.html)
 - [Final](final.html)
-- [Team](https://jeffomidvaran.github.io/group9_cs175_minecraft/team)
+- [Team](khttps://jeffomidvaran.github.io/group9_cs175_minecraft/team)
 
 What's Markdown (`.md`)?
 
