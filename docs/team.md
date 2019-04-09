@@ -6,11 +6,11 @@ title:  Team
 # {{ page.title }}
 
 
-## USER 1
-***UCI Net ID***: ucinetid1
+## Jeffrey Omidvaran
+***UCI Net ID***: jomidvar
 
-## USER 2
-***UCI Net ID***: ucinetid2
+## Benedict Mbakogu
+***UCI Net ID***: bmbakogu
 
-## USER 3
-***UCI Net ID***: ucinetid3
+## Matt Reingol
+***UCI Net ID***: mreingol
