@@ -15,9 +15,9 @@ deep learning for object recognition
 
 ## Evaluation Plan
 paragraph 1 <br/>
-    +how do we measure success? (metrics, baselines)
+    how do we measure success? (metrics, baselines)
 
-paragraph 2<br/>
+paragraph 2 <br/>
     +how will we verfiy that the project works
 
 ## Appointment with the Instructor
