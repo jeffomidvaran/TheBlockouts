@@ -13,4 +13,4 @@ title:  Team
 ***UCI Net ID***: bmbakogu
 
 ## Matt Reingold
-***UCI Net ID***: mreingold
+***UCI Net ID***: mreingol
