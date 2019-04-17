@@ -12,5 +12,5 @@ title:  Team
 ## Benedict Mbakogu
 ***UCI Net ID***: bmbakogu
 
-## Matt Reingol
-***UCI Net ID***: mreingol
+## Matt Reingold
+***UCI Net ID***: mreingold
