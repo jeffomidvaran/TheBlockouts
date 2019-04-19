@@ -12,7 +12,7 @@ Reports:
 - [Final](final.html)
 - [Team Details](https://jeffomidvaran.github.io/group9_cs175_minecraft/team)
 
-What's Markdown (`.md`)?
+<!-- What's Markdown (`.md`)?
 
 Markdown is markup that lets you write hypertext (HTML) documents
 in easy-to-read and easy-to-write plain text.
@@ -26,7 +26,6 @@ text here.
 This is another paragraph.
 
 This is a list:
-
 - Orange
 - Apple
 - Blueberry
@@ -38,4 +37,4 @@ Just getting started with Markdown?
 See the [HTML <-> Markdown Quick Reference (Cheat Sheet)][quickref].
 
 
-[quickref]: https://github.com/mundimark/quickrefs/blob/master/HTML.md
+[quickref]: https://github.com/mundimark/quickrefs/blob/master/HTML.md -->
