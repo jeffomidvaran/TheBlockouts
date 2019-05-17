@@ -14,17 +14,26 @@ else:
 # More interesting generator string: "3;7,44*49,73,35:1,159:4,95:13,35:13,159:11,95:10,159:14,159:6,35:6,95:6;12;"
 
 
-def make_enclosure(start_x, start_z, end_x, end_z, height):
+def make_enclosure(start_x, start_z, end_x, end_z, height,type):
     result_string = ""
     ''' start x and start z will start building from the upper left corner''' 
-    for h in range(227, 227+height):
+
+    # BUILD THE CEILING
+    for x in range(start_x, end_x):
+      for z in range(start_z, end_z+2):
+        result_string += '<DrawBlock x="' + str(x) + '" y="' +str(227+height-1) + '" z="' + str(z) + '" type="' +str(type) + '"/>'
+        result_string += '<DrawBlock x="' + str(x) + '" y="' +str(227-1) + '" z="' + str(z) + '" type="' +str(type) + '"/>'
+
+
+    # BUILD THE WALLS 
+    for h in range(227, 227+height-1):
       for x in range(start_x, end_x):
-              result_string += '<DrawBlock x="' + str(x) + '" y="' +str(h) + '" z="' + str(start_z) + '" type="stone"/>'
-              result_string += '<DrawBlock x="' + str(x) + '" y="' +str(h) + '" z="' + str(end_z+1) + '" type="stone"/>'
+              result_string += '<DrawBlock x="' + str(x) + '" y="' +str(h) + '" z="' + str(start_z) + '" type="' +str(type) + '"/>'
+              result_string += '<DrawBlock x="' + str(x) + '" y="' +str(h) + '" z="' + str(end_z+1) + '" type="' +str(type) + '"/>'
 
       for z in range(start_z, end_z):
-              result_string += '<DrawBlock x="' + str(start_x) + '" y="' +str(h) + '" z="' + str(z+1) + '" type="stone"/>'
-              result_string += '<DrawBlock x="' + str(end_x-1) + '" y="' +str(h) + '" z="' + str(z+1) + '" type="stone"/>'
+              result_string += '<DrawBlock x="' + str(start_x) + '" y="' +str(h) + '" z="' + str(z+1) + '" type="' +str(type) + '"/>'
+              result_string += '<DrawBlock x="' + str(end_x-1) + '" y="' +str(h) + '" z="' + str(z+1) + '" type="' +str(type) + '"/>'
 
     return result_string
 
@@ -45,9 +54,9 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
                     <Weather>clear</Weather> 
                 </ServerInitialConditions>
                 <ServerHandlers>
-                  <FlatWorldGenerator generatorString="3;7,220*1,5*3,2;3;,biome_1"/>
+                  <FlatWorldGenerator generatorString="3;7,220*1,5*3,2;3;,biome_1" forceReset="1"/>
                   <DrawingDecorator>
-                    ''' + make_enclosure(1,1,10,5,3) + ''' 
+                    ''' + make_enclosure(1,1,20,20,6,"bedrock") + ''' 
                   </DrawingDecorator>
                   <ServerQuitFromTimeUp timeLimitMs="300"/>
                   <ServerQuitWhenAnyAgentFinishes/>
@@ -58,7 +67,10 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
               <AgentSection mode="Survival">
                 <Name>MalmoTutorialBot</Name>
                 <AgentStart>
-                    <Placement x="0" y="227" z="0" yaw="0"/>
+                    <Placement x="-1" y="227" z="-1" yaw="-40"/>
+                    <Inventory>
+                      <InventoryItem slot="0" type="diamond_pickaxe" />
+                    </Inventory>
                 </AgentStart>
                 <AgentHandlers>
                   <ObservationFromFullStats/>
