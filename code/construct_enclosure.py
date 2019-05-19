@@ -13,28 +13,71 @@ else:
 
 # More interesting generator string: "3;7,44*49,73,35:1,159:4,95:13,35:13,159:11,95:10,159:14,159:6,35:6,95:6;12;"
 
+def spawn_enemies(*args):
+    result_string = ""
+    for enemy in args:
+        entity = """
+        <DrawEntity
+        x="{}" 
+        y="{}"
+        z="{}"
+        type="{}"
+        yaw="{}"
+        pitch="{}"
+        xVel="{}"
+        yVel="{}"
+        zVel="{}"/>
+        """.format(enemy[0],enemy[1],enemy[2],enemy[3],enemy[4],enemy[5],
+            enemy[6],enemy[7],enemy[8])
+        result_string += entity
+    return result_string
 
-def make_enclosure(start_x, start_z, end_x, end_z, height,type):
+
+def spawn_multiple_enemies(ememy_list):
+  result_string = ""
+  for e in ememy_list:
+    for _ in range(e[1]):
+      result_string +=  '''<DrawEntity x="10" y="227" z="10" type="{}" yaw="0" />'''.format(e[0])
+
+  return result_string
+
+
+def make_enclosure(start_x, start_z, end_x, end_z, height, barrier_type="clay", wall_type="bedrock", barrier=True):
     result_string = ""
     ''' start x and start z will start building from the upper left corner''' 
 
     # BUILD THE CEILING
     for x in range(start_x, end_x):
       for z in range(start_z, end_z+2):
-        result_string += '<DrawBlock x="' + str(x) + '" y="' +str(227+height-1) + '" z="' + str(z) + '" type="' +str(type) + '"/>'
-        result_string += '<DrawBlock x="' + str(x) + '" y="' +str(227-1) + '" z="' + str(z) + '" type="' +str(type) + '"/>'
+        #CEILING
+        result_string += '''<DrawBlock x="{}" y="{}" z="{}" type="glowstone" />'''.format(x,227+height-2, z)  
+        result_string += '''<DrawBlock x="{}" y="{}" z="{}" type="{}" />'''.format(x,227+height-1, z, wall_type)  
 
+        #FLOOR
+        result_string += '''<DrawBlock x="{}" y="{}" z="{}" type="glowstone" />'''.format(x,227-1, z)  
+        result_string += '''<DrawBlock x="{}" y="{}" z="{}" type="{}" />'''.format(x,227-2, z, wall_type)  
 
     # BUILD THE WALLS 
     for h in range(227, 227+height-1):
       for x in range(start_x, end_x):
-              result_string += '<DrawBlock x="' + str(x) + '" y="' +str(h) + '" z="' + str(start_z) + '" type="' +str(type) + '"/>'
-              result_string += '<DrawBlock x="' + str(x) + '" y="' +str(h) + '" z="' + str(end_z+1) + '" type="' +str(type) + '"/>'
+        result_string += '''<DrawBlock x="{}" y="{}" z="{}" type="{}" />'''.format(x, h, start_z, wall_type)  
+        result_string += '''<DrawBlock x="{}" y="{}" z="{}" type="{}" />'''.format(x, h, end_z+1, wall_type)  
 
       for z in range(start_z, end_z):
-              result_string += '<DrawBlock x="' + str(start_x) + '" y="' +str(h) + '" z="' + str(z+1) + '" type="' +str(type) + '"/>'
-              result_string += '<DrawBlock x="' + str(end_x-1) + '" y="' +str(h) + '" z="' + str(z+1) + '" type="' +str(type) + '"/>'
+        result_string += '''<DrawBlock x="{}" y="{}" z="{}" type="{}" />'''.format(start_x, h, z+1, wall_type)  
+        result_string += '''<DrawBlock x="{}" y="{}" z="{}" type="{}" />'''.format(end_x-1, h, z+1, wall_type)  
 
+    # BUILD THE BARRIER
+    if(barrier == True):
+      for x in range(start_x, end_x):
+        # LOWER BARRIER
+        result_string += '''<DrawBlock x="{}" y="{}" z="{}" type="{}" />'''.format(x, 227, start_z+5, barrier_type)  
+
+        # UPPER BARRIER
+        for h in range(227+2, 227+height-1):
+          result_string += '''<DrawBlock x="{}" y="{}" z="{}" type="{}" />'''.format(x, h, start_z+5,barrier_type)  
+
+  
     return result_string
 
 
@@ -56,9 +99,10 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
                 <ServerHandlers>
                   <FlatWorldGenerator generatorString="3;7,220*1,5*3,2;3;,biome_1" forceReset="1"/>
                   <DrawingDecorator>
-                    ''' + make_enclosure(1,1,20,20,6,"bedrock") + ''' 
+                  ''' + make_enclosure(0,0,30,30,12) + ''' 
+                  ''' + spawn_multiple_enemies([["Zombie", 4], ["Enderman", 5], ["Creeper", 0], ["Spider", 0]]) + '''
                   </DrawingDecorator>
-                  <ServerQuitFromTimeUp timeLimitMs="300"/>
+                  <ServerQuitFromTimeUp timeLimitMs="5000"/>
                   <ServerQuitWhenAnyAgentFinishes/>
                 </ServerHandlers>  
 
@@ -67,9 +111,13 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
               <AgentSection mode="Survival">
                 <Name>MalmoTutorialBot</Name>
                 <AgentStart>
-                    <Placement x="-1" y="227" z="-1" yaw="-40"/>
+                    <Placement x="4" y="227" z="4" yaw="-40"/>
                     <Inventory>
-                      <InventoryItem slot="0" type="diamond_pickaxe" />
+                      <InventoryItem slot="0" type="bow" />
+                      <InventoryItem slot="1" type="arrow" quantity="64" />
+                      <InventoryItem slot="2" type="arrow" quantity="64" />
+                      <InventoryItem slot="3" type="dirt" quantity="64" />
+                      <InventoryItem slot="4" type="diamond_pickaxe" />
                     </Inventory>
                 </AgentStart>
                 <AgentHandlers>
@@ -121,13 +169,42 @@ while not world_state.has_mission_begun:
 print()
 print("Mission running ", end=' ')
 
+############# ADDED BY JEFF ########################### 
+###################################################### 
+
+def move(speed):
+  if(speed > 1 or speed < -1):
+    raise ValueError("Invalid speed entered")
+  agent_host.sendCommand("move " + str(speed))
+
+
+def attack():
+  agent_host.sendCommand("attack 1")
+
+
+def shoot_arrow(cock_time=1):
+  agent_host.sendCommand("use 1")
+  time.sleep(cock_time)
+  agent_host.sendCommand("use 0")
+  
+def place_block():
+  agent_host.sendCommand("hotbar.3 1")
+
+
+
+
+
+###################################################### 
+###################################################### 
+
 # Loop until mission ends:
 while world_state.is_mission_running:
-    print(".", end="")
-    time.sleep(0.1)
-    world_state = agent_host.getWorldState()
-    for error in world_state.errors:
-        print("Error:",error.text)
+  print(".", end="")
+  time.sleep(0.1)
+  world_state = agent_host.getWorldState()
+  for error in world_state.errors:
+      print("Error:",error.text)
+
 
 print()
 print("Mission ended")
