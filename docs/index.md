@@ -3,7 +3,7 @@ layout: default
 title:  Home
 ---
 
-Source code: https://jeffomidvaran.github.io/group9_cs175_minecraft/
+Source code: https://github.com/jeffomidvaran/TheBlockouts
 
 Reports:
 
