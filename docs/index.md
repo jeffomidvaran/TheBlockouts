@@ -5,12 +5,24 @@ title:  Home
 
 Source code: https://github.com/jeffomidvaran/TheBlockouts
 
-Reports:
+<h1> 
+Welcome to the website of The Blockouts
+</h1> 
 
+<img src="zombie1.png">
+
+Reports:
 - [Proposal](https://jeffomidvaran.github.io/group9_cs175_minecraft/proposal)
 - [Status](status.html)
 - [Final](final.html)
 - [Team Details](https://jeffomidvaran.github.io/group9_cs175_minecraft/team)
+
+
+
+
+
+
+
 
 <!-- What's Markdown (`.md`)?
 
