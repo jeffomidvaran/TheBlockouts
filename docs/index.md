@@ -12,8 +12,12 @@ The Blockouts Project Homepage
 
 <h2>Project Summary</h2>
 <p>
-The main idea of The Blockouts project is to create a counter siege AI. Counter siege, in this context, means the AI will try to survive as long as possible while trying to preventing enemies from crossing its border. 
-The ai will take as input enemy locations, enemy types, the ideal state of its structure, and the current state of the structure. As output the AI will decide between moving, fighting, and placing blocks.
+The main idea of The Blockouts project is to create a counter siege AI. Counter siege, 
+in this context, means the AI will try to survive as long as possible while trying to 
+preventing enemies from crossing its border. The AI will take as input enemy locations, 
+and enemy types. As output the AI will decide between moving, fighting, which enemy to 
+attack and which weapon to use. We plan to add more input information and output 
+information as our project grows... 
 </p>
 
 
@@ -26,8 +30,10 @@ The ai will take as input enemy locations, enemy types, the ideal state of its s
 
 <h2>Useful Links</h2>
 <p>
-Source code: https://github.com/jeffomidvaran/TheBlockouts
+Source code: https://github.com/jeffomidvaran/TheBlochttps://github.com/Microsoft/malmo-challenge/tree/master/malmopykouts
+<br>
 Minecraft Wiki: https://minecraft.gamepedia.com/
+<br>
 AI inspiration: https://github.com/Microsoft/malmo-challenge/tree/master/malmopy
 </p>
 
