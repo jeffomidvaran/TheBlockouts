@@ -16,7 +16,7 @@ The main idea of The Blockouts project is to create a counter siege AI. Counter 
 in this context, means the AI will try to survive as long as possible while trying to 
 preventing enemies from crossing its border. The AI will take as input enemy locations, 
 and enemy types. As output the AI will decide between moving, fighting, which enemy to 
-attack and which weapon to use. We plan to add more input information and output 
+attack and which weapon to use. We plan to add more input and output 
 information as our project grows... 
 </p>
 
