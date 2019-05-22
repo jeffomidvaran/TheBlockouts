@@ -1,4 +1,5 @@
 from __future__ import print_function
+from __future__ import division
 from builtins import range
 from past.utils import old_div
 import MalmoPython
@@ -6,11 +7,7 @@ import os
 import sys
 import time
 import json
-import random
-import errno
 import math
-import malmoutils
-
 
 if sys.version_info[0] == 2:
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # flush print output immediately
@@ -18,42 +15,28 @@ else:
     import functools
     print = functools.partial(print, flush=True)
 
+################################################################
 ###################### USER ADDED FUNCTIONS ####################
-def move(speed):
-  if(speed > 1 or speed < -1):
-    raise ValueError("Invalid speed entered")
-  agent_host.sendCommand("move " + str(speed))
+################################################################
 
+ARENA_WIDTH = 20
+ARENA_BREADTH = 20
 
-def attack():
-  agent_host.sendCommand("attack 1")
+def game_time(seconds):
+    return str(seconds * 1000)
 
 
 def shoot_arrow(cock_time=1):
   agent_host.sendCommand("use 1")
   time.sleep(cock_time)
   agent_host.sendCommand("use 0")
-  
-def place_block():
-  agent_host.sendCommand("hotbar.3 1")
 
 
 def spawn_enemies(*args):
     result_string = ""
     for enemy in args:
-        entity = """
-        <DrawEntity
-        x="{}" 
-        y="{}"
-        z="{}"
-        type="{}"
-        yaw="{}"
-        pitch="{}"
-        xVel="{}"
-        yVel="{}"
-        zVel="{}"/>
-        """.format(enemy[0],enemy[1],enemy[2],enemy[3],enemy[4],enemy[5],
-            enemy[6],enemy[7],enemy[8])
+        entity = """ <DrawEntity x="{}" y="{}" z="{}" type="{}" yaw="{}" pitch="{}" xVel="{}" yVel="{}" zVel="{}"/>
+        """.format(enemy[0],enemy[1],enemy[2],enemy[3],enemy[4],enemy[5], enemy[6],enemy[7],enemy[8])
         result_string += entity
     return result_string
 
@@ -66,7 +49,6 @@ def spawn_multiple_enemies(ememy_list):
         result_string +=  '''<DrawEntity x="10" y="227" z="10" type="{}" yaw="0" xVel="{}" yVel="{}" zVel="{}"/>'''.format(e[0],1,1,1)
       else:
         result_string +=  '''<DrawEntity x="10" y="227" z="10" type="{}" yaw="0" />'''.format(e[0])
-
   return result_string
 
 
@@ -107,16 +89,6 @@ def make_enclosure(start_x, start_z, end_x, end_z, height, barrier_type="clay", 
   
     return result_string
 
-# Task parameters:
-malmoutils.fix_print()
-
-agent_host = MalmoPython.AgentHost()
-malmoutils.parse_command_line(agent_host)
-recordingsDirectory = malmoutils.get_recordings_directory(agent_host)
-video_requirements = '<VideoProducer><Width>860</Width><Height>480</Height></VideoProducer>' if agent_host.receivedArgument("record_video") else ''
-
-ARENA_WIDTH = 20
-ARENA_BREADTH = 20
 
 def getCorner(index,top,left,expand=0,y=0):
     ''' Return part of the XML string that defines the requested corner'''
@@ -124,95 +96,77 @@ def getCorner(index,top,left,expand=0,y=0):
     z = str(-(expand+old_div(ARENA_BREADTH,2))) if top else str(expand+old_div(ARENA_BREADTH,2))
     return 'x'+index+'="'+x+'" y'+index+'="' +str(y)+'" z'+index+'="'+z+'"'
 
-def getSpawnEndTag(i):
-    return ' type="mob_spawner" variant="' + ["Sheep", "Pig"][i % 2] + '"/>'
 
-missionXML = '''<?xml version="1.0" encoding="UTF-8" ?>
-    <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <About>
-            <Summary>CS175 Project</Summary>
-        </About>
+################################################################
+#################### END USER DEFINED FUNCTIONS ################
+################################################################
 
-        <ModSettings>
-            <MsPerTick>50</MsPerTick>
-        </ModSettings>
-        <ServerSection>
-            <ServerInitialConditions>
+missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+            <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            
+              <About>
+                <Summary>Hello world!</Summary>
+              </About>
+              
+            <ServerSection>
+              <ServerInitialConditions>
                 <Time>
                     <StartTime>1000</StartTime>
-                    <AllowPassageOfTime>true</AllowPassageOfTime>
+                    <AllowPassageOfTime>false</AllowPassageOfTime>
                 </Time>
                 <AllowSpawning>true</AllowSpawning>
-                <AllowedMobs>Pig Sheep</AllowedMobs>
-            </ServerInitialConditions>
-            <ServerHandlers>
+                <Weather>clear</Weather>
+              </ServerInitialConditions>
+
+              <ServerHandlers>
                 <FlatWorldGenerator generatorString="3;7,220*1,5*3,2;3;,biome_1" forceReset="1"/>
                 <DrawingDecorator>
                    ''' + make_enclosure(0,0,30,30,12) + ''' 
-                   ''' + spawn_multiple_enemies([["Sheep", 1], ["Zombie", 4], ["Enderman", 4], ["Creeper", 0], ["Spider", 0]]) + '''
+                   ''' + spawn_multiple_enemies([["Sheep", 0], ["Zombie", 1], ["Enderman", 1], ["Creeper", 0], ["Spider", 0]]) + '''
                 </DrawingDecorator>
-                <AnimationDecorator ticksPerUpdate="10">
-                <Linear>
-                    <CanvasBounds>
-                        <min x="''' + str(old_div(-ARENA_BREADTH,2)) + '''" y="205" z="''' + str(old_div(-ARENA_BREADTH,2)) + '''"/>
-                        <max x="''' + str(old_div(ARENA_WIDTH,2)) + '''" y="217" z="''' + str(old_div(ARENA_WIDTH,2)) + '''"/>
-                    </CanvasBounds>
-                    <InitialPos x="0" y="207" z="0"/>
-                    <InitialVelocity x="0" y="0.025" z="0"/>
-                </Linear>
-                <DrawingDecorator>
-                    <DrawLine ''' + getCorner("1",True,True,expand=-2) + " " + getCorner("2",True,False,expand=-2) + getSpawnEndTag(1) + '''
-                    <DrawLine ''' + getCorner("1",True,True,expand=-2) + " " + getCorner("2",False,True,expand=-2) + getSpawnEndTag(1) + '''
-                    <DrawLine ''' + getCorner("1",False,False,expand=-2) + " " + getCorner("2",True,False,expand=-2) + getSpawnEndTag(1) + '''
-                    <DrawLine ''' + getCorner("1",False,False,expand=-2) + " " + getCorner("2",False,True,expand=-2) + getSpawnEndTag(1) + '''
-                    <DrawLine ''' + getCorner("1",True,True,expand=-3) + " " + getCorner("2",True,False,expand=-3) + getSpawnEndTag(2) + '''
-                    <DrawLine ''' + getCorner("1",True,True,expand=-3) + " " + getCorner("2",False,True,expand=-3) + getSpawnEndTag(2) + '''
-                    <DrawLine ''' + getCorner("1",False,False,expand=-3) + " " + getCorner("2",True,False,expand=-3) + getSpawnEndTag(2) + '''
-                    <DrawLine ''' + getCorner("1",False,False,expand=-3) + " " + getCorner("2",False,True,expand=-3) + getSpawnEndTag(2) + '''
-                </DrawingDecorator>
-                </AnimationDecorator>
-               <ServerQuitWhenAnyAgentFinishes />
-               <ServerQuitFromTimeUp timeLimitMs="110000"/>
-            </ServerHandlers>
-        </ServerSection>
-
-        <AgentSection mode="Survival">
-            <Name>The Hunter</Name>
-            <AgentStart>
-                <Placement x="4" y="227" z="4" pitch="20" yaw="-40"/>
-                <Inventory>
-                    <InventoryItem slot="0" type="diamond_pickaxe" />
-                    <InventoryItem slot="1" type="bow" />
-                    <InventoryItem slot="2" type="arrow" quantity="64" />
-                    <InventoryItem slot="3" type="dirt" quantity="64" />
-                </Inventory>
-            </AgentStart>
-            <AgentHandlers>
-                <ContinuousMovementCommands turnSpeedDegs="420"/>
-                <ObservationFromRay/>
-                <RewardForDamagingEntity>
+                <ServerQuitFromTimeUp timeLimitMs="''' + game_time(10) + '''"/>
+                <ServerQuitWhenAnyAgentFinishes/>
+                </ServerHandlers>
+              </ServerSection>
+              
+              <AgentSection mode="Survival">
+                <Name>MalmoTutorialBot</Name>
+                <AgentStart>
+                    <Placement x="4" y="227" z="4" pitch="0" yaw="-40"/>
+                    <Inventory>
+                        <InventoryItem slot="0" type="diamond_pickaxe"/>
+                        <InventoryItem slot="1" type="bow"/>
+                        <InventoryItem slot="2" type="arrow" quantity="64"/>
+                    </Inventory>
+                </AgentStart>
+                <AgentHandlers>
+                  <ObservationFromFullStats/>
+                  <ObservationFromRay/>
+                  <ObservationFromNearbyEntities>
+                    <Range name="entities" xrange="'''+str(ARENA_WIDTH)+'''" yrange="2" zrange="'''+str(ARENA_BREADTH)+'''" />
+                  </ObservationFromNearbyEntities>
+                  <ObservationFromGrid>
+                      <Grid name="floor3x3">
+                        <min x="-1" y="-1" z="-1"/>
+                        <max x="1" y="-1" z="1"/>
+                      </Grid>
+                  </ObservationFromGrid>
+                  <ContinuousMovementCommands turnSpeedDegs="180"/>
+                  <InventoryCommands/>
+                  <AgentQuitFromTouchingBlockType>
+                      <Block type="diamond_block" />
+                  </AgentQuitFromTouchingBlockType>
+                  <RewardForDamagingEntity>
                     <Mob type="Sheep" reward="1"/>
                     <Mob type="Enderman" reward="1"/>
-                    <Mob type="Pig" reward="-1"/>
                     <Mob type="Zombie" reward="1"/>
-                </RewardForDamagingEntity>
-                <ObservationFromNearbyEntities>
-                    <Range name="entities" xrange="'''+str(ARENA_WIDTH)+'''" yrange="2" zrange="'''+str(ARENA_BREADTH)+'''" />
-                </ObservationFromNearbyEntities>
-                <ObservationFromFullStats/>''' + video_requirements + '''
-            </AgentHandlers>
-        </AgentSection>
+                  </RewardForDamagingEntity>
+                </AgentHandlers>
+              </AgentSection>
+            </Mission>'''
 
-    </Mission>'''
-    
 
-# mission loop will start here
 agent_host = MalmoPython.AgentHost()
-my_mission = MalmoPython.MissionSpec(missionXML, True)
-
-# Set up recording
-my_mission_record = MalmoPython.MissionRecordSpec()
-
 try:
     agent_host.parse( sys.argv )
 except RuntimeError as e:
@@ -222,6 +176,9 @@ except RuntimeError as e:
 if agent_host.receivedArgument("help"):
     print(agent_host.getUsage())
     exit(0)
+
+my_mission = MalmoPython.MissionSpec(missionXML, True)
+my_mission_record = MalmoPython.MissionRecordSpec()
 
 # Attempt to start a mission:
 max_retries = 3
@@ -236,30 +193,32 @@ for retry in range(max_retries):
         else:
             time.sleep(2)
 
-
-############ Loop while mission is starting: ############
+######################################################### 
+############ loop while mission is starting: ############
+######################################################### 
 world_state = agent_host.getWorldState()
 while not world_state.has_mission_begun:
     time.sleep(0.1)
     world_state = agent_host.getWorldState()
+    for error in world_state.errors:
+        print("Error:",error.text)
 
-total_reward = 0
-sheep_population = 0
-zombie_population = 0
-self_x = 0
-self_z = 0
-current_yaw = 0
-
-###################################################### 
-###################################################### 
 
 # Loop until mission ends:
 while world_state.is_mission_running:
+    time.sleep(0.1)
     world_state = agent_host.getWorldState()
-    if(world_state.number_of_observations_since_last_state > 0):
-        msg = world_state.observations[-1].text
-        ob = json.loads(msg)
+    for error in world_state.errors:
+        print("Error:",error.text)
+    if world_state.number_of_observations_since_last_state > 0: # Have any observations come in?
+        msg = world_state.observations[-1].text                 # Yes, so get the text
+        ob = json.loads(msg)                          # and parse the JSON
+        # grid = ob.get(u'floor3x3', 0)                 # and get the grid we asked for
 
+
+##########################################################
+############ ADDED CODE FROM 1ST FILE ################### 
+##########################################################
         # Get Avatar position/orientation:
         if u'Yaw' in ob:
             current_yaw = ob[u'Yaw']
@@ -271,41 +230,37 @@ while world_state.is_mission_running:
         if u'LineOfSight' in ob:
             los = ob[u'LineOfSight']
             type=los["type"]
-            if type == "Enderman":
-                agent_host.sendCommand("attack 1")
-                agent_host.sendCommand("attack 0")
             if type == "Zombie":
-                agent_host.sendCommand("attack 1")
-                agent_host.sendCommand("attack 0")
+                # when a zombie is in front of you release the arrow 
+                agent_host.sendCommand("hotbar.2 1")
+                agent_host.sendCommand("hotbar.2 0") 
+                time.sleep(0.001)
+                agent_host.sendCommand("use 1")
+                agent_host.sendCommand("move 0")
+                time.sleep(0.1)
+                agent_host.sendCommand("use 0")
+            if type == "Enderman":
+                print("enderman seen")
+
 
         # Use the nearby-entities observation to decide which way to move
-        # keep track of population sizes 
         if u'entities' in ob:
             entities = ob["entities"]
-            num_sheep = 0
             num_zombies = 0
             num_enderman = 0 
             x_pull = 0
             z_pull = 0
- 
+
             for e in entities:
-                if e["name"] == "Sheep":
-                    num_sheep += 1
-                elif e["name"] == "Zombie":
+                if e["name"] == "Zombie":
                     num_zombies += 1
                     # move toward the Zombie
                     dist = max(0.0001, (e["x"] - self_x) * (e["x"] - self_x) + (e["z"] - self_z) * (e["z"] - self_z))
-                    weight = 21.0 - e["life"]
-                    x_pull += weight * (e["x"] - self_x) / dist
-                    z_pull += weight * (e["z"] - self_z) / dist
-                elif e["name"] == "Enderman":
-                    num_enderman = 0
-                    dist = max(0.0001, (e["x"] - self_x) * (e["x"] - self_x) + (e["z"] - self_z) * (e["z"] - self_z))
-                    weight = 41.0 - e["life"]
+                    weight = 21.0 - e["life"] #
                     x_pull += weight * (e["x"] - self_x) / dist
                     z_pull += weight * (e["z"] - self_z) / dist
 
-            # Determine the direction we need to turn in order to head towards point with most zombies
+        # Determine the direction we need to turn in order to head towards point with most zombies
             yaw = -180 * math.atan2(x_pull, z_pull) / math.pi
             difference = yaw - current_yaw;
             while difference < -180:
@@ -317,17 +272,12 @@ while world_state.is_mission_running:
             move_speed = 1.0 if abs(difference) < 0.5 else 0  # move slower when turning faster - helps with "orbiting" problem
             agent_host.sendCommand("move " + str(move_speed))
 
-# mission loop will end here
-for error in world_state.errors:
-    print("Error:",error.text)
+
+##########################################################
+##########################################################
+##########################################################
+
 
 print()
 print("Mission ended")
 # Mission has ended.
-
-
-
-
-
-
-
