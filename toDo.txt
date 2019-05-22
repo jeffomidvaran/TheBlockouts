@@ -1,13 +1,18 @@
+CURRENT ISSUES 
+	How do you tell what the current held item is 
+	respond to distance
+	Lighting the room (glow-stone are destructible)
+		this is an issue with the Creepers	
+	
+	How do you tell what the current held item is 
 
 POSSIBLE AI ATTRIBUTES 
 	which enemy to attack
 	distance from avatar
 	How long to charge the bow
-
-
-CURRENT ISSUES 
-	Swithing Items
-	Lighting the room (glowstone are destructable)
-		this is an issue with the Creepers	
+	don't look at enderman
+	react to distance
 	
+
+
 
