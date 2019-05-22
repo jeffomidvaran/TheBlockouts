@@ -22,14 +22,9 @@ information as our project grows...
 
 
 <h2>Useful Links</h2>
-<p>
 - [Source code](https://github.com/jeffomidvaran/TheBlochttps://github.com/Microsoft/malmo-challenge/tree/master/malmopykouts)
-<br>
 - [Minecraft Wiki](https://minecraft.gamepedia.com/)
-<br>
 - [AI inspiration](https://github.com/Microsoft/malmo-challenge/tree/master/malmopy)
-<br>
-</p>
 
 
 <h2>Reports:</h2>
