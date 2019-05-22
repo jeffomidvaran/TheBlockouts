@@ -10,9 +10,16 @@ Welcome to the website of The Blockouts
 </h1> 
 
 
-<img src="zombie2.jpg">
+<img src="zombie3.jpg">
+</br>
+<h2>Project Information</h2>
+
+</br>
+
+<p>
 The main idea of The Blockouts project is to create a counter siege AI. Counter siege, in this context, means the AI will try to survive as long as possible while trying to preventing enemies from crossing its border. 
 The ai will take as input enemy locations, enemy types, the ideal state of its structure, and the current state of the structure. As output the AI will decide between moving, fighting, and placing blocks.
+</p>
 
 
 <h2>Reports:</h2>
