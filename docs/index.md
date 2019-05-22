@@ -21,13 +21,6 @@ information as our project grows...
 </p>
 
 
-<h2>Reports:</h2>
-- [Proposal](https://jeffomidvaran.github.io/TheBlockouts/proposal)
-- [Status](https://jeffomidvaran.github.io/TheBlockouts/status)
-- [Final](https://jeffomidvaran.github.io/TheBlockouts/final)
-- [Team Details](https://jeffomidvaran.github.io/TheBlockouts/team)
-
-
 <h2>Useful Links</h2>
 <p>
 Source code: https://github.com/jeffomidvaran/TheBlochttps://github.com/Microsoft/malmo-challenge/tree/master/malmopykouts
@@ -35,7 +28,17 @@ Source code: https://github.com/jeffomidvaran/TheBlochttps://github.com/Microsof
 Minecraft Wiki: https://minecraft.gamepedia.com/
 <br>
 AI inspiration: https://github.com/Microsoft/malmo-challenge/tree/master/malmopy
+<br>
 </p>
+
+
+<h2>Reports:</h2>
+- [Proposal](https://jeffomidvaran.github.io/TheBlockouts/proposal)
+- [Status](https://jeffomidvaran.github.io/TheBlockouts/status)
+- [Final](https://jeffomidvaran.github.io/TheBlockouts/final)
+- [Team Details](https://jeffomidvaran.github.io/TheBlockouts/team)
+
+
 
 
 
