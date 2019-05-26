@@ -15,6 +15,10 @@ The main idea of The Blockouts project is to create a counter siege AI. Counter 
 
 ## Approach
 few paragrahs. Detailed description of approach. Summarize main algorithm
+Bellman Equation for Q learning
+$$ Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a_t] $$
+
+
 
 ## Evaluation 
 evaluate project. Present results to show reader that this is a working implementation. Plot charts tables etc... Few paragraphs
