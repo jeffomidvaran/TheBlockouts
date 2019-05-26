@@ -8,6 +8,7 @@ import sys
 import time
 import json
 import math
+import random
 
 if sys.version_info[0] == 2:
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # flush print output immediately
@@ -21,15 +22,67 @@ else:
 
 ARENA_WIDTH = 20
 ARENA_BREADTH = 20
+NUMBER_OF_REPS = 1
+MAX_LIFE_DICT = {"Villager":20, "Zombie":20, "Enderman":40, "Creeper":20}
+
+
+class Timer:
+    def __init__(self, run_time):
+        self.start_time = time.time()
+        self.run_time = run_time
+        self.stop_time = self.start_time + run_time
+    
+    def time_elapsed(self):
+        if(self.stop_time <= time.time()):
+            self.start_time = time.time()
+            self.stop_time = self.start_time + self.run_time
+            return True
+        else:
+            return False
+
 
 def game_time(seconds):
     return str(seconds * 1000)
 
 
-def shoot_arrow(cock_time=1):
+def switch_to_item(hotslot_number):
+    '''Not 0 indexed 1 is the first item in the hotbar'''
+    agent_host.sendCommand("hotbar." + str(hotslot_number) + " 1") #Press the hotbar key
+    agent_host.sendCommand("hotbar." + str(hotslot_number) + " 0") 
+    time.sleep(0.2)
+
+
+def shoot_arrow(cock_time=0.3):
   agent_host.sendCommand("use 1")
   time.sleep(cock_time)
   agent_host.sendCommand("use 0")
+  time.sleep(0.03)
+
+
+def attack():
+  agent_host.sendCommand("attack 1")
+
+
+def determine_direction(x_pull, z_pull, current_yaw):
+  ''' Determine the direction we need to turn in order to head towards point with most zombies '''
+  yaw = -180 * math.atan2(x_pull, z_pull) / math.pi
+  difference = yaw - current_yaw;
+  while difference < -180:
+      difference += 360;
+  while difference > 180:
+      difference -= 360;
+  difference /= 180.0;
+  return difference
+
+
+def get_agent_position(ob):
+  if u'Yaw' in ob:
+      current_yaw = ob[u'Yaw']
+  if u'XPos' in ob:
+      self_x = ob[u'XPos']
+  if u'ZPos' in ob:
+      self_z = ob[u'ZPos']
+  return current_yaw, self_x, self_z
 
 
 def spawn_enemies(*args):
@@ -47,9 +100,61 @@ def spawn_multiple_enemies(ememy_list):
     for _ in range(e[1]):
       if(e[0] == "Creeper"):
         result_string +=  '''<DrawEntity x="10" y="227" z="10" type="{}" yaw="0" xVel="{}" yVel="{}" zVel="{}"/>'''.format(e[0],1,1,1)
+      elif(e[0] == "Villager" or e[0] == "Sheep"):
+        result_string +=  '''<DrawEntity x="4" y="227" z="4" type="{}" yaw="0" />'''.format(e[0])
       else:
         result_string +=  '''<DrawEntity x="10" y="227" z="10" type="{}" yaw="0" />'''.format(e[0])
   return result_string
+
+
+def switch_to_random_entity(ob):
+    entities = ob["entities"]
+    living_entities_list = []
+    for e in entities:
+      if "life" in e:
+        living_entities_list.append(e)
+        
+    random_index = random.randrange(1,len(living_entities_list))
+    return living_entities_list[random_index]
+
+
+def move_and_turn_agent(e_dict, current_yaw, self_x, self_z):
+    x_pull = 0
+    z_pull = 0
+
+    dist = max(0.0001, (e_dict["x"] - self_x) * (e_dict["x"] - self_x) + (e_dict["z"] - self_z) * (e_dict["z"] - self_z))
+
+    weight = MAX_LIFE_DICT[e_dict["name"]]+1 - e_dict["life"] #
+    
+    x_pull += weight * (e_dict["x"] - self_x) / dist
+    z_pull += weight * (e_dict["z"] - self_z) / dist
+
+    difference = determine_direction(x_pull, z_pull, current_yaw)
+    agent_host.sendCommand("turn " + str(difference))
+    # move slower when turning faster - helps with "orbiting" problem
+    move_speed = 1.0 if abs(difference) < 0.5 else 0  
+    agent_host.sendCommand("move " + str(move_speed))
+
+
+def attack_entity_with_bow_swing(ob, e_dict, current_yaw, self_x, self_z):
+    if u'LineOfSight' in ob:
+      los = ob[u'LineOfSight']
+      hitType=los["hitType"]
+      if hitType == "entity":
+        # 
+        # if(ob["currentItemIndex"] != 1): # switch item not sword
+        #   switch_to_item(1)
+        attack()
+    move_and_turn_agent(e_dict, current_yaw, self_x, self_z)
+
+
+def attack_entity_by_shooting_arrow(ob, e_dict, current_yaw, self_x, self_z):
+    if u'LineOfSight' in ob:
+      los = ob[u'LineOfSight']
+      hitType=los["hitType"]
+      if hitType == "entity":
+        shoot_arrow()
+    move_and_turn_agent(e_dict, current_yaw, self_x, self_z)
 
 
 def make_enclosure(start_x, start_z, end_x, end_z, height, barrier_type="clay", wall_type="bedrock", barrier=True):
@@ -121,8 +226,8 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
               <ServerHandlers>
                 <FlatWorldGenerator generatorString="3;7,220*1,5*3,2;3;,biome_1" forceReset="1"/>
                 <DrawingDecorator>
-                   ''' + make_enclosure(0,0,30,30,12) + ''' 
-                   ''' + spawn_multiple_enemies([["Sheep", 0], ["Zombie", 1], ["Enderman", 1], ["Creeper", 0], ["Spider", 0]]) + '''
+                   ''' + make_enclosure(0,0,20,20,12) + ''' 
+                   ''' + spawn_multiple_enemies([["Villager", 0], ["Zombie", 1], ["Enderman", 0], ["Creeper", 0]]) + ''' 
                 </DrawingDecorator>
                 <ServerQuitFromTimeUp timeLimitMs="''' + game_time(10) + '''"/>
                 <ServerQuitWhenAnyAgentFinishes/>
@@ -130,34 +235,30 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
               </ServerSection>
               
               <AgentSection mode="Survival">
-                <Name>MalmoTutorialBot</Name>
+                <Name>ourAgent</Name>
                 <AgentStart>
                     <Placement x="4" y="227" z="4" pitch="0" yaw="-40"/>
                     <Inventory>
-                        <InventoryItem slot="0" type="diamond_pickaxe"/>
-                        <InventoryItem slot="1" type="bow"/>
+                        <InventoryItem slot="1" type="diamond_sword"/>
+                        <InventoryItem slot="0" type="bow"/>
                         <InventoryItem slot="2" type="arrow" quantity="64"/>
                     </Inventory>
                 </AgentStart>
                 <AgentHandlers>
+                  <ObservationFromHotBar/>
                   <ObservationFromFullStats/>
                   <ObservationFromRay/>
+                  <ObservationFromFullInventory/>
                   <ObservationFromNearbyEntities>
                     <Range name="entities" xrange="'''+str(ARENA_WIDTH)+'''" yrange="2" zrange="'''+str(ARENA_BREADTH)+'''" />
                   </ObservationFromNearbyEntities>
-                  <ObservationFromGrid>
-                      <Grid name="floor3x3">
-                        <min x="-1" y="-1" z="-1"/>
-                        <max x="1" y="-1" z="1"/>
-                      </Grid>
-                  </ObservationFromGrid>
                   <ContinuousMovementCommands turnSpeedDegs="180"/>
                   <InventoryCommands/>
                   <AgentQuitFromTouchingBlockType>
                       <Block type="diamond_block" />
                   </AgentQuitFromTouchingBlockType>
                   <RewardForDamagingEntity>
-                    <Mob type="Sheep" reward="1"/>
+                    <Mob type="Villager" reward="-1"/>
                     <Mob type="Enderman" reward="1"/>
                     <Mob type="Zombie" reward="1"/>
                   </RewardForDamagingEntity>
@@ -166,118 +267,80 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
             </Mission>'''
 
 
-agent_host = MalmoPython.AgentHost()
-try:
-    agent_host.parse( sys.argv )
-except RuntimeError as e:
-    print('ERROR:',e)
-    print(agent_host.getUsage())
-    exit(1)
-if agent_host.receivedArgument("help"):
-    print(agent_host.getUsage())
-    exit(0)
+if __name__  == '__main__':
+    random.seed(0)
 
-my_mission = MalmoPython.MissionSpec(missionXML, True)
-my_mission_record = MalmoPython.MissionRecordSpec()
-
-# Attempt to start a mission:
-max_retries = 3
-for retry in range(max_retries):
+    agent_host = MalmoPython.AgentHost()
     try:
-        agent_host.startMission( my_mission, my_mission_record )
-        break
+        agent_host.parse( sys.argv )
     except RuntimeError as e:
-        if retry == max_retries - 1:
-            print("Error starting mission:",e)
-            exit(1)
-        else:
-            time.sleep(2)
+        print('ERROR:',e)
+        print(agent_host.getUsage())
+        exit(1)
+    if agent_host.receivedArgument("help"):
+        print(agent_host.getUsage())
+        exit(0)
 
-######################################################### 
-############ loop while mission is starting: ############
-######################################################### 
-world_state = agent_host.getWorldState()
-while not world_state.has_mission_begun:
-    time.sleep(0.1)
-    world_state = agent_host.getWorldState()
-    for error in world_state.errors:
-        print("Error:",error.text)
+  
+############################################################# 
+#################  Start of mission #########################
+############################################################# 
 
+    for repeat in range(NUMBER_OF_REPS):
+      my_mission = MalmoPython.MissionSpec(missionXML, True)
+      my_mission_record = MalmoPython.MissionRecordSpec()
 
-# Loop until mission ends:
-while world_state.is_mission_running:
-    time.sleep(0.1)
-    world_state = agent_host.getWorldState()
-    for error in world_state.errors:
-        print("Error:",error.text)
-    if world_state.number_of_observations_since_last_state > 0: # Have any observations come in?
-        msg = world_state.observations[-1].text                 # Yes, so get the text
-        ob = json.loads(msg)                          # and parse the JSON
-        # grid = ob.get(u'floor3x3', 0)                 # and get the grid we asked for
+      # Attempt to start a mission:
+      max_retries = 3
+      for retry in range(max_retries):
+          try:
+              agent_host.startMission( my_mission, my_mission_record )
+              break
+          except RuntimeError as e:
+              if retry == max_retries - 1:
+                  print("Error starting mission:",e)
+                  exit(1)
+              else:
+                  time.sleep(2)
 
-
-##########################################################
-############ ADDED CODE FROM 1ST FILE ################### 
-##########################################################
-        # Get Avatar position/orientation:
-        if u'Yaw' in ob:
-            current_yaw = ob[u'Yaw']
-        if u'XPos' in ob:
-            self_x = ob[u'XPos']
-        if u'ZPos' in ob:
-            self_z = ob[u'ZPos']
-        # Use the line-of-sight observation to determine when to hit and when not to hit:
-        if u'LineOfSight' in ob:
-            los = ob[u'LineOfSight']
-            type=los["type"]
-            if type == "Zombie":
-                # when a zombie is in front of you release the arrow 
-                agent_host.sendCommand("hotbar.2 1")
-                agent_host.sendCommand("hotbar.2 0") 
-                time.sleep(0.001)
-                agent_host.sendCommand("use 1")
-                agent_host.sendCommand("move 0")
-                time.sleep(0.1)
-                agent_host.sendCommand("use 0")
-            if type == "Enderman":
-                print("enderman seen")
+      ####### LOOP WHILE MISSION IS STARTING: SETUP #################
+      world_state = agent_host.getWorldState()
+      while not world_state.has_mission_begun:
+          time.sleep(0.1)
+          world_state = agent_host.getWorldState()
+          for error in world_state.errors:
+              print("Error:",error.text)
 
 
-        # Use the nearby-entities observation to decide which way to move
-        if u'entities' in ob:
-            entities = ob["entities"]
-            num_zombies = 0
-            num_enderman = 0 
-            x_pull = 0
-            z_pull = 0
-
-            for e in entities:
-                if e["name"] == "Zombie":
-                    num_zombies += 1
-                    # move toward the Zombie
-                    dist = max(0.0001, (e["x"] - self_x) * (e["x"] - self_x) + (e["z"] - self_z) * (e["z"] - self_z))
-                    weight = 21.0 - e["life"] #
-                    x_pull += weight * (e["x"] - self_x) / dist
-                    z_pull += weight * (e["z"] - self_z) / dist
-
-        # Determine the direction we need to turn in order to head towards point with most zombies
-            yaw = -180 * math.atan2(x_pull, z_pull) / math.pi
-            difference = yaw - current_yaw;
-            while difference < -180:
-                difference += 360;
-            while difference > 180:
-                difference -= 360;
-            difference /= 180.0;
-            agent_host.sendCommand("turn " + str(difference))
-            move_speed = 1.0 if abs(difference) < 0.5 else 0  # move slower when turning faster - helps with "orbiting" problem
-            agent_host.sendCommand("move " + str(move_speed))
+      ####### LOOP UNTIL MISSION ENDS ##############################
+      while world_state.is_mission_running:
+          time.sleep(0.1)
+          world_state = agent_host.getWorldState()
+          for error in world_state.errors:
+              print("Error:",error.text)
+          if world_state.number_of_observations_since_last_state > 0:
+              msg = world_state.observations[-1].text    
+              ob = json.loads(msg)  
+              current_yaw, self_x, self_z = get_agent_position(ob)
 
 
-##########################################################
-##########################################################
-##########################################################
+              # ##### used to switch something every n number of seconds #########
+              # ##### an alternate to sleep when you don't want to freeze the agent's actions 
+              # t = Timer(time.time(), 2)
+              # while(True):
+              #     if(t.time_elapsed() == True):
+              #         print("over")
+              # print("the end")
 
 
-print()
-print("Mission ended")
-# Mission has ended.
+              ####### FUNCTIONS TO BE USED BY THE AI #################
+              entity_dict = switch_to_random_entity(ob)
+              # attack_entity_with_bow_swing(ob, entity_dict, current_yaw, self_x, self_z)
+              attack_entity_by_shooting_arrow(ob, entity_dict, current_yaw, self_x, self_z)
+
+      print()
+      print("Mission {} ended".format(repeat))
+
+      ##########################################################
+      ###################### END OF MISSION ####################
+      ##########################################################
