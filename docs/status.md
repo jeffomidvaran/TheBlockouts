@@ -21,18 +21,18 @@ For our project we are implementing a q-tabular reinforcement learning system in
 Our update function is based on the Bellman Equation for Q learning. 
 <br>
         $$ Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a_t]] $$
-<br><br>
+<br>
 <!-- $$ \text{oldQValue} + [\alpha \times (\text{currentReward} + \gamma * \text{maxQValueForStateX} - \text{oldQValue})] $$ -->
 
-#### Our states will consist of the following:
+
+##### Our states will consist of the following:
 <ul>
     <li>Are there currently any zombies, endermen, or villagers alive (boolean)</li>
     <li>What type of entity is in the agent’s line of sight (entity_dictionary)</li>
 </ul>
 
 
-<br>
-#### Our action states will consist of the following:
+##### Our action states will consist of the following:
 <ul>
     <li>Attacking with the swing of a bow (the agent will move to the entity in line of sight and start swiping at it with a bow)</li>
     <li>Attacking by shooting an arrow (the agent will move to the entity in the line of sight and start shooting arrows)</li>
@@ -40,15 +40,14 @@ Our update function is based on the Bellman Equation for Q learning.
     <li>Doing nothing (the agent will wait for the next agent action sequence)</li>
 </ul>
 
-<br>
-#### Terminating States:
+
+##### Terminating States:
 <ul>
     <li>Time runs out</li>
     <li>Agent dies</li>
 </ul>
 
 
-<br>
 #### Rewards:
 <ul>
     <li>Dealing damage to a zombie: 10</li>
@@ -61,6 +60,7 @@ Our update function is based on the Bellman Equation for Q learning.
 
 #### Goal:
 <p>Kill as many bad entities as possible (Zombies and Enderman) while leaving Villagers unharmed. </p>
+
 
 #### Environment:
 <p>The environment will be set as a box-like cave with a barrier separating the Agent and Villagers from the Zombies and Enderman. Enderman have the ability to remove blocks from the barrier protecting the Agent and Villagers. The Agent will be equipped with a bow-and-arrow and will have the ability to swipe the bow and fire arrows. The environment will have a set number of Zombies, Endermen, and Villagers. </p>
