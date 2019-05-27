@@ -18,7 +18,7 @@ few paragrahs. Detailed description of approach. Summarize main algorithm
 <br>
 Bellman Equation for Q learning
 <br>
-$$ Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a_t] $$
+$$ Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a_t]] $$
 
 <img src="images/reinforcement_learning1.jpg">
 
