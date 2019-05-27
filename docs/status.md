@@ -31,7 +31,19 @@ $$ \text{oldQValue} + [\alpha \times (\text{currentReward} + \gamma * \text{maxQ
 </ul>
 
 
+# Our action states will consist of the following:
+<ul>
+    <li>Attacking with the swing of a bow (the agent will move to the entity in line of sight and start swiping at it with a bow)</li>
+    <li>Attacking by shooting an arrow (the agent will move to the entity in the line of sight and start shooting arrows)</li>
+    <li>Targeting a random entity (the agent will switch focus to an entity in the current line of sight)</li>
+    <li>Doing nothing (the agent will wait for the next agent action sequence)</li>
+</ul>
 
+# Terminating States:
+<ul>
+    <li>Time runs out</li>
+    <li>Agent dies</li>
+</ul>
 
 
 ## Evaluation 
