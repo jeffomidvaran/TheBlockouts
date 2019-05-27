@@ -65,8 +65,27 @@ $$ \quad Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [
 
 
 
-## Evaluation 
-evaluate project. Present results to show reader that this is a working implementation. Plot charts tables etc... Few paragraphs
+## Evaluation
+<h4>Grading Agent's choice of who to attack: </h4>
+We take multiple instances of states and resulting actions to see what was in the agent’s line of sight when they chose to attack. We grade the agent on the percentage of times a harmful entity was in the line of sight vs a non-harmful entity. This is to show that the agent learns to prioritize zombies while avoiding villagers.
+
+
+<h4>Grading Reward: </h4>
+The reward metric is a percentage. Where the Agent receives a 100% if all of the harmful entities are killed and all of the non-harmful entities are left unharmed. To calculate this metric, the following formula is applied. 
+
+$$ v $$ = number of attacks needed to kill villager * reward for hitting villager
+$$ z $$ = number of attacks needed to kill zombie * reward for hitting zombie
+$$ e $$ = number of attacks needed to kill Endermen * reward for hitting Endermen
+
+$$ n_v = $$ total number of villagers
+$$ n_z = $$ total number of zombies
+$$ n_e = $$ total number of Endermen
+
+$$ n_{vk} = $$ total number of villagers killed
+$$ n_{zk} = $$ total number of zombies killed
+$$ n_{ek} = $$ total number of Endermen killed
+
+$$ p = \text{percentage} =  \frac{|vn_v| + vn_{vk} + zn_{zk} + en_{ek}} {vn_{v} + zn_{z} + en_{e}} $$
 
 ## Remaining Goal and Challenges
 few paragraphs, goals for the next 2-3 weeks. Describe how you consider your prototype to be limited, and what you want to add.
