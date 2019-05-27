@@ -85,7 +85,7 @@ $$ n_{vk} = $$ total number of villagers killed<br>
 $$ n_{zk} = $$ total number of zombies killed<br>
 $$ n_{ek} = $$ total number of Endermen killed<br>
 
-$$ p = \text{percentage} =  \frac{|vn_v| + vn_{vk} + zn_{zk} + en_{ek}} {vn_{v} + zn_{z} + en_{e}} $$ 
+$$ \text{successful reward percentage} = P =  \frac{|vn_v| + vn_{vk} + zn_{zk} + en_{ek}} {vn_{v} + zn_{z} + en_{e}} $$ 
 
 ## Remaining Goal and Challenges
 few paragraphs, goals for the next 2-3 weeks. Describe how you consider your prototype to be limited, and what you want to add.
