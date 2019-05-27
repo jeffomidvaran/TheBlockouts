@@ -15,24 +15,24 @@ example capture of a run that is working. How you did it failures
 
 
 ## Approach
-For our project we are implementing a q-tabular reinforcement learning system inspired by assignment_2. 
+    For our project we are implementing a q-tabular reinforcement learning system inspired by assignment_2. 
 <br><br>
-<img src="images/reinforcement_learning1.jpg">
+    <img src="images/reinforcement_learning1.jpg">
 <br><br>
-Our update function is based on the Bellman Equation for Q learning. 
+    Our update function is based on the Bellman Equation for Q learning. 
 <br>
-$$ \quad Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a_t]] $$ 
-<!-- $$ \text{oldQValue} + [\alpha \times (\text{currentReward} + \gamma * \text{maxQValueForStateX} - \text{oldQValue})] $$ -->
+    $$ \quad Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a_t]] $$ 
+    <!-- $$ \text{oldQValue} + [\alpha \times (\text{currentReward} + \gamma * \text{maxQValueForStateX} - \text{oldQValue})] $$ -->
 
 
-<h4> Our states will consist of the following: </h4>
+<h4> State Space: </h4>
 <ul>
     <li>Are there currently any zombies, endermen, or villagers alive (boolean)</li>
     <li>What type of entity is in the agent’s line of sight (entity_dictionary)</li>
 </ul>
 
 
-<h4> Our action states will consist of the following: </h4>
+<h4> Action Space: </h4>
 <ul>
     <li>Attacking with the swing of a bow (the agent will move to the entity in line of sight and start swiping at it with a bow)</li>
     <li>Attacking by shooting an arrow (the agent will move to the entity in the line of sight and start shooting arrows)</li>
@@ -59,11 +59,11 @@ $$ \quad Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [
 
 
 <h4>Goal:</h4>
-<p>Kill as many bad entities as possible (Zombies and Enderman) while leaving Villagers unharmed. </p>
+    <p>Kill as many bad entities as possible (Zombies and Enderman) while leaving Villagers unharmed. </p>
 
 
 <h4>Environment: </h4>
-<p>The environment will be set as a box-like cave with a barrier separating the Agent and Villagers from the Zombies and Enderman. Enderman have the ability to remove blocks from the barrier protecting the Agent and Villagers. The Agent will be equipped with a bow-and-arrow and will have the ability to swipe the bow and fire arrows. The environment will have a set number of Zombies, Endermen, and Villagers. </p>
+    <p>The environment will be set as a box-like cave with a barrier separating the Agent and Villagers from the Zombies and Enderman. Enderman have the ability to remove blocks from the barrier protecting the Agent and Villagers. The Agent will be equipped with a bow-and-arrow and will have the ability to swipe the bow and fire arrows. The environment will have a set number of Zombies, Endermen, and Villagers. </p>
 
 
 
