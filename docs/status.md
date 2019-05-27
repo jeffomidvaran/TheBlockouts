@@ -3,14 +3,15 @@ layout: default
 title: Status
 ---
 
+## Project Summary
+The main idea of The Blockouts project is to create a counter siege AI. Counter siege, in this context, means the AI will try to survive as long as possible while trying to preventing enemies from crossing its border. The AI will take as input enemy locations, and enemy types. As output the AI will decide between moving, fighting, which enemy to attack and which weapon to use. We plan to add more input and output information as our project grows...
+
+
 ## Video
 brief description of problem
 example capture of a run that is working. How you did it failures
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/wnPaqCjGIgA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-## Project Summary
-The main idea of The Blockouts project is to create a counter siege AI. Counter siege, in this context, means the AI will try to survive as long as possible while trying to preventing enemies from crossing its border. The AI will take as input enemy locations, and enemy types. As output the AI will decide between moving, fighting, which enemy to attack and which weapon to use. We plan to add more input and output information as our project grows...
 
 
 ## Approach
@@ -24,14 +25,14 @@ $$ \quad Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [
 <!-- $$ \text{oldQValue} + [\alpha \times (\text{currentReward} + \gamma * \text{maxQValueForStateX} - \text{oldQValue})] $$ -->
 
 
-##### Our states will consist of the following:
+<h4> Our states will consist of the following: </h4>
 <ul>
     <li>Are there currently any zombies, endermen, or villagers alive (boolean)</li>
     <li>What type of entity is in the agent’s line of sight (entity_dictionary)</li>
 </ul>
 
 
-##### Our action states will consist of the following:
+<h4> Our action states will consist of the following: </h4>
 <ul>
     <li>Attacking with the swing of a bow (the agent will move to the entity in line of sight and start swiping at it with a bow)</li>
     <li>Attacking by shooting an arrow (the agent will move to the entity in the line of sight and start shooting arrows)</li>
@@ -40,14 +41,14 @@ $$ \quad Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [
 </ul>
 
 
-##### Terminating States:
+<h4> Terminating States: </h4>
 <ul>
     <li>Time runs out</li>
     <li>Agent dies</li>
 </ul>
 
 
-#### Rewards:
+<h4>Rewards:</h4>
 <ul>
     <li>Dealing damage to a zombie: 10</li>
     <li>Dealing damage to an endermen: 1</li>
@@ -57,11 +58,11 @@ $$ \quad Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [
 </ul>
 
 
-#### Goal:
+<h4>Goal:</h4>
 <p>Kill as many bad entities as possible (Zombies and Enderman) while leaving Villagers unharmed. </p>
 
 
-#### Environment:
+<h4>Environment: </h4>
 <p>The environment will be set as a box-like cave with a barrier separating the Agent and Villagers from the Zombies and Enderman. Enderman have the ability to remove blocks from the barrier protecting the Agent and Villagers. The Agent will be equipped with a bow-and-arrow and will have the ability to swipe the bow and fire arrows. The environment will have a set number of Zombies, Endermen, and Villagers. </p>
 
 
