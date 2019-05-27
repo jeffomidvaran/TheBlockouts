@@ -22,10 +22,10 @@ Our update function is based on the Bellman Equation for Q learning.
 <br>
 $$ Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a_t]] $$
 <br>
-$$ \text{Old_q_value} + [\alpha \times (\text{current_reward} + \gamma * \text{max_q_value_for_state_x} - text{old_q_value})] $$
+$$ \text{Old\_q\_value} + [\alpha \times (\text{current\_reward} + \gamma * \text{max\_q\_value\_for\_state\_x} - text{old\_q\_value})] $$
 
 <br>
-$$ 2+2 $$
+$$ \text{testing} $$
 
 
 
