@@ -99,3 +99,5 @@ few paragraphs, goals for the next 2-3 weeks. Describe how you consider your pro
 - [hit_test.py](https://github.com/microsoft/malmo/blob/master/Malmo/samples/Python_examples/hit_test.py)
 - [Microsoft XML Schema documentation](https://microsoft.github.io/malmo/0.30.0/Schemas/MissionHandlers.html)
 
+
+<br><br>
