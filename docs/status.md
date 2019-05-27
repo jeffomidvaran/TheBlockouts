@@ -73,9 +73,9 @@ We take multiple instances of states and resulting actions to see what was in th
 <h4>Grading Reward: </h4>
 The reward metric is a percentage. Where the Agent receives a 100% if all of the harmful entities are killed and all of the non-harmful entities are left unharmed. To calculate this metric, the following formula is applied. 
 
-$$ v $$ = number of attacks needed to kill villager * reward for hitting villager
-$$ z $$ = number of attacks needed to kill zombie * reward for hitting zombie
-$$ e $$ = number of attacks needed to kill Endermen * reward for hitting Endermen
+$$ v $$ = number of attacks needed to kill villager * reward for hitting villager<br>
+$$ z $$ = number of attacks needed to kill zombie * reward for hitting zombie<br>
+$$ e $$ = number of attacks needed to kill Endermen * reward for hitting Endermen<br>
 
 $$ n_v = $$ total number of villagers<br>
 $$ n_z = $$ total number of zombies<br>
@@ -85,7 +85,7 @@ $$ n_{vk} = $$ total number of villagers killed<br>
 $$ n_{zk} = $$ total number of zombies killed<br>
 $$ n_{ek} = $$ total number of Endermen killed<br>
 
-$$ p = \text{percentage} =  \frac{|vn_v| + vn_{vk} + zn_{zk} + en_{ek}} {vn_{v} + zn_{z} + en_{e}} $$
+$$ p = \text{percentage} =  \frac{|vn_v| + vn_{vk} + zn_{zk} + en_{ek}} {vn_{v} + zn_{z} + en_{e}} $$ <br>
 
 ## Remaining Goal and Challenges
 few paragraphs, goals for the next 2-3 weeks. Describe how you consider your prototype to be limited, and what you want to add.
