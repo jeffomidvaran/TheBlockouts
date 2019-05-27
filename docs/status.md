@@ -24,6 +24,13 @@ $$ Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a
 <br>
 $$ \text{oldQValue} + [\alpha \times (\text{currentReward} + \gamma * \text{maxQValueForStateX} - \text{oldQValue})] $$
 
+# Our states will consist of the following:
+<ul>
+    <li>Are there currently any zombies, endermen, or villagers alive (boolean)</li>
+    <li>What type of entity is in the agent’s line of sight (entity_dictionary)</li>
+</ul>
+
+
 
 
 
