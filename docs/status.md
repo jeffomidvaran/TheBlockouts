@@ -19,8 +19,8 @@ For our project we are implementing a q-tabular reinforcement learning system in
 <img src="images/reinforcement_learning1.jpg">
 <br><br>
 Our update function is based on the Bellman Equation for Q learning. 
-$$ \quad Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a_t]] $$ 
 <br>
+$$ \quad Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a_t]] $$ 
 <!-- $$ \text{oldQValue} + [\alpha \times (\text{currentReward} + \gamma * \text{maxQValueForStateX} - \text{oldQValue})] $$ -->
 
 
