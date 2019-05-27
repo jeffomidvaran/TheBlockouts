@@ -88,7 +88,16 @@ $$ n_{ek} = $$ total number of Endermen killed<br>
 $$ \text{successful reward percentage} = P =  \frac{|vn_v| + vn_{vk} + zn_{zk} + en_{ek}} {vn_{v} + zn_{z} + en_{e}} $$ 
 
 ## Remaining Goal and Challenges
-few paragraphs, goals for the next 2-3 weeks. Describe how you consider your prototype to be limited, and what you want to add.
+<h4>Remaining Goals</h4>
+Our remaining goal for the rest of this quarter will be to improve the effectiveness of our AI. Our current prototype is limited in that the Agent will only use the bow swing attack as opposed to shooting an arrow. This can be useful when the agent is crowded by enemies (doing damage to multiple entities at a time). However, for the final implementation we would like explore how the efficacy of shooting an arrow vs swinging the bow based on the an entities distance from the Agent. 
+<br>
+Currently, our Agent does not fully account for the unique behavior of Endermen. Endermen are the only harmful entities in our environment that can alter the barrier (Endermen will randomly pick up blocks from the barrier and move them). They do not attack an Agent unless they are attacked first or if an Agent makes eye contact with an Endermen. Once an Endermen is attacked or makes eye contact with the Agent, it becomes far more dangerous than a Zombie. For the final implementation, we plan to explore effective ways for the Agent to learn to deal with the unique behavior of Endermen. 
+<br>
+In our current implementation we are using a set number of entities but we would like to explore the effectiveness of our agent when the number of entities varies. The Agents goal regarding which harmful entity to attack and which type of attack to use may change in these scenarios. 
+<br>
+<h4>Challenges</h4>
+In the next few weeks we anticipate having several challenges. First will be ensuring the accuracy of our evaluation cases. Some metrics are simple and arguably represent what our agent is trying to accomplish, but others may not be. Secondly our agent may behave unexpectedly as the state space and action space grow (especially given the unpredictable actions of Endermen). To combat these issue we plan to do more extensive testing, reinforcement learning and potentially develop new logistical tests that will reveal the efficacy our Q-learning system.
+
 
 
 
@@ -99,5 +108,4 @@ few paragraphs, goals for the next 2-3 weeks. Describe how you consider your pro
 - [hit_test.py](https://github.com/microsoft/malmo/blob/master/Malmo/samples/Python_examples/hit_test.py)
 - [Microsoft XML Schema documentation](https://microsoft.github.io/malmo/0.30.0/Schemas/MissionHandlers.html)
 
-
-<br><br>
+<br>
