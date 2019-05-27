@@ -14,13 +14,16 @@ The main idea of The Blockouts project is to create a counter siege AI. Counter 
 
 
 ## Approach
-few paragrahs. Detailed description of approach. Summarize main algorithm
+For our project we are implementing a q-tabular reinforcement learning system inspired by assignment_2. 
+<img src="images/reinforcement_learning1.jpg">
 <br>
-Bellman Equation for Q learning
+Our update function is based on the Bellman Equation for Q learning. 
 <br>
 $$ Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a_t]] $$
+<br>
+$$ \text{Old_q_value} + [\alpha \times (\text{current_reward} + \gamma * \text{max_q_value_for_state_x} - text{old_q_value})] $$
 
-<img src="images/reinforcement_learning1.jpg">
+
 
 
 ## Evaluation 
