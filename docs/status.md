@@ -31,6 +31,7 @@ $$ Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a
 </ul>
 
 
+<br>
 #### Our action states will consist of the following:
 <ul>
     <li>Attacking with the swing of a bow (the agent will move to the entity in line of sight and start swiping at it with a bow)</li>
@@ -39,11 +40,31 @@ $$ Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [s_t, a
     <li>Doing nothing (the agent will wait for the next agent action sequence)</li>
 </ul>
 
+<br>
 #### Terminating States:
 <ul>
     <li>Time runs out</li>
     <li>Agent dies</li>
 </ul>
+
+
+<br>
+#### Rewards:
+<ul>
+    <li>Dealing damage to a zombie: 10</li>
+    <li>Dealing damage to an endermen: 1</li>
+    <li>Dealing damage to a villager: -10</li>
+    <li>Surviving until end of game: 100</li>
+    <li>Dying before the game time has ended: -100</li>
+</ul>
+
+
+#### Goal:
+<p>Kill as many bad entities as possible (Zombies and Enderman) while leaving Villagers unharmed. </p>
+
+#### Environment:
+<p>The environment will be set as a box-like cave with a barrier separating the Agent and Villagers from the Zombies and Enderman. Enderman have the ability to remove blocks from the barrier protecting the Agent and Villagers. The Agent will be equipped with a bow-and-arrow and will have the ability to swipe the bow and fire arrows. The environment will have a set number of Zombies, Endermen, and Villagers. </p>
+
 
 
 ## Evaluation 
