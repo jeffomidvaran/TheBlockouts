@@ -92,10 +92,10 @@ few paragraphs, goals for the next 2-3 weeks. Describe how you consider your pro
 
 
 
-<h2>Resources Used</h2>
-- [Source code](https://github.com/jeffomidvaran/TheBlochttps://github.com/Microsoft/malmo-challenge/tree/master/malmopykouts)
+## Resources Used 
 - [Minecraft Wiki](https://minecraft.gamepedia.com/)
 - [AI inspiration](https://github.com/Microsoft/malmo-challenge/tree/master/malmopy)
+- [tabular_q_learning.py](https://github.com/microsoft/malmo/blob/master/Malmo/samples/Python_examples/tabular_q_learning.py)
+- [hit_test.py](https://github.com/microsoft/malmo/blob/master/Malmo/samples/Python_examples/hit_test.py)
+- [Microsoft XML Schema documentation](https://microsoft.github.io/malmo/0.30.0/Schemas/MissionHandlers.html)
 
-code documentation
-AI/ML libraries, stackoverflow
