@@ -77,13 +77,13 @@ $$ v $$ = number of attacks needed to kill villager * reward for hitting village
 $$ z $$ = number of attacks needed to kill zombie * reward for hitting zombie
 $$ e $$ = number of attacks needed to kill Endermen * reward for hitting Endermen
 
-$$ n_v = $$ total number of villagers
-$$ n_z = $$ total number of zombies
-$$ n_e = $$ total number of Endermen
+$$ n_v = $$ total number of villagers<br>
+$$ n_z = $$ total number of zombies<br>
+$$ n_e = $$ total number of Endermen<br>
 
-$$ n_{vk} = $$ total number of villagers killed
-$$ n_{zk} = $$ total number of zombies killed
-$$ n_{ek} = $$ total number of Endermen killed
+$$ n_{vk} = $$ total number of villagers killed<br>
+$$ n_{zk} = $$ total number of zombies killed<br>
+$$ n_{ek} = $$ total number of Endermen killed<br>
 
 $$ p = \text{percentage} =  \frac{|vn_v| + vn_{vk} + zn_{zk} + en_{ek}} {vn_{v} + zn_{z} + en_{e}} $$
 
