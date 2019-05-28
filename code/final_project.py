@@ -25,6 +25,13 @@ ARENA_BREADTH = 20
 NUMBER_OF_REPS = 1
 MAX_LIFE_DICT = {"Villager":20, "Zombie":20, "Enderman":40, "Creeper":20}
 
+villager_view_count_list = [] 
+enderman_view_count_list = [] 
+zombie_view_count_list = [] 
+
+villager_view_count = 0
+enderman_view_count = 0
+zombie_view_count  = 0
 
 class Timer:
     def __init__(self, run_time):
@@ -39,6 +46,12 @@ class Timer:
             return True
         else:
             return False
+
+
+class RL:
+    ''' Reinforcement Learner ''' 
+    def __init__(self):
+      self.reward = 0
 
 
 def game_time(seconds):
@@ -111,12 +124,14 @@ def switch_to_random_entity(ob):
     entities = ob["entities"]
     living_entities_list = []
     for e in entities:
-      if "life" in e:
+      if "life" in e and e["life"] > 0: 
         living_entities_list.append(e)
-        
-    random_index = random.randrange(1,len(living_entities_list))
-    return living_entities_list[random_index]
-
+    num_of_entities = len(living_entities_list) 
+    if(num_of_entities > 1):
+        random_index = random.randrange(1,num_of_entities)
+        return living_entities_list[random_index]
+    else:
+      return None
 
 def move_and_turn_agent(e_dict, current_yaw, self_x, self_z):
     x_pull = 0
@@ -136,25 +151,50 @@ def move_and_turn_agent(e_dict, current_yaw, self_x, self_z):
     agent_host.sendCommand("move " + str(move_speed))
 
 
-def attack_entity_with_bow_swing(ob, e_dict, current_yaw, self_x, self_z):
-    if u'LineOfSight' in ob:
-      los = ob[u'LineOfSight']
-      hitType=los["hitType"]
-      if hitType == "entity":
-        # 
-        # if(ob["currentItemIndex"] != 1): # switch item not sword
-        #   switch_to_item(1)
-        attack()
-    move_and_turn_agent(e_dict, current_yaw, self_x, self_z)
+
+def do_nothing():
+    pass
 
 
-def attack_entity_by_shooting_arrow(ob, e_dict, current_yaw, self_x, self_z):
+def handle_line_of_site(attack_function, ob):
     if u'LineOfSight' in ob:
       los = ob[u'LineOfSight']
+      if(los["type"] == "Villager"):
+        global villager_view_count
+        villager_view_count += 1 
+      elif(los["type"] == "Zombie"):
+        global zombie_view_count
+        zombie_view_count +=1
+      elif(los["type"] == "Enderman"):
+        global enderman_view_count
+        enderman_view_count += 1
       hitType=los["hitType"]
       if hitType == "entity":
-        shoot_arrow()
-    move_and_turn_agent(e_dict, current_yaw, self_x, self_z)
+        attack_function()
+        # attack()
+
+
+def attack_entity_with_bow_swing(ob, entity_dict, current_yaw, self_x, self_z):
+    move_and_turn_agent(entity_dict, current_yaw, self_x, self_z)
+    life_before_attack = entity_dict["life"]
+    handle_line_of_site(attack, ob)
+      
+
+def attack_entity_by_shooting_arrow(ob, entity_dict, current_yaw, self_x, self_z):
+    move_and_turn_agent(entity_dict, current_yaw, self_x, self_z)
+    handle_line_of_site(attack_entity_by_shooting_arrow, ob)
+
+
+def get_agent_dict(ob):
+    ''' returns the 0th index entity which is always the agent '''
+    entities = ob["entities"]
+    return entities[0]
+
+def entity_died(entity_dict):
+    if(entity_dict["life"] == 0):
+      return True
+    else: 
+      return False
 
 
 def make_enclosure(start_x, start_z, end_x, end_z, height, barrier_type="clay", wall_type="bedrock", barrier=True):
@@ -229,7 +269,7 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
                    ''' + make_enclosure(0,0,20,20,12) + ''' 
                    ''' + spawn_multiple_enemies([["Villager", 0], ["Zombie", 1], ["Enderman", 0], ["Creeper", 0]]) + ''' 
                 </DrawingDecorator>
-                <ServerQuitFromTimeUp timeLimitMs="''' + game_time(10) + '''"/>
+                <ServerQuitFromTimeUp timeLimitMs="''' + game_time(60) + '''"/>
                 <ServerQuitWhenAnyAgentFinishes/>
                 </ServerHandlers>
               </ServerSection>
@@ -258,9 +298,9 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
                       <Block type="diamond_block" />
                   </AgentQuitFromTouchingBlockType>
                   <RewardForDamagingEntity>
-                    <Mob type="Villager" reward="-1"/>
+                    <Mob type="Villager" reward="-10"/>
                     <Mob type="Enderman" reward="1"/>
-                    <Mob type="Zombie" reward="1"/>
+                    <Mob type="Zombie" reward="10"/>
                   </RewardForDamagingEntity>
                 </AgentHandlers>
               </AgentSection>
@@ -287,6 +327,9 @@ if __name__  == '__main__':
 ############################################################# 
 
     for repeat in range(NUMBER_OF_REPS):
+      villager_view_count = 0
+      enderman_view_count = 0
+      zombie_view_count  = 0
       my_mission = MalmoPython.MissionSpec(missionXML, True)
       my_mission_record = MalmoPython.MissionRecordSpec()
 
@@ -324,6 +367,8 @@ if __name__  == '__main__':
               current_yaw, self_x, self_z = get_agent_position(ob)
 
 
+
+
               # ##### used to switch something every n number of seconds #########
               # ##### an alternate to sleep when you don't want to freeze the agent's actions 
               # t = Timer(time.time(), 2)
@@ -333,14 +378,29 @@ if __name__  == '__main__':
               # print("the end")
 
 
-              ####### FUNCTIONS TO BE USED BY THE AI #################
+              ####### FUNCTIONS TO BE USED BY THE RL CLASS #################
+              agent_dict = get_agent_dict(ob)
               entity_dict = switch_to_random_entity(ob)
-              # attack_entity_with_bow_swing(ob, entity_dict, current_yaw, self_x, self_z)
-              attack_entity_by_shooting_arrow(ob, entity_dict, current_yaw, self_x, self_z)
+
+              if(entity_dict != None):
+                attack_entity_with_bow_swing(ob, entity_dict, current_yaw, self_x, self_z)
+                # attack_entity_by_shooting_arrow(ob, entity_dict, current_yaw, self_x, self_z)
+                # do_nothing()
+                # entity_died(entity_dict)
+              else: 
+                # this will be reached when there are no living entities left 
+                # except for the agent 
+                break
 
       print()
       print("Mission {} ended".format(repeat))
+      villager_view_count_list.append(villager_view_count)
+      enderman_view_count_list.append(enderman_view_count) 
+      zombie_view_count_list.append(zombie_view_count)
 
+      print(villager_view_count_list)
+      print(enderman_view_count_list)
+      print(zombie_view_count_list)
       ##########################################################
       ###################### END OF MISSION ####################
       ##########################################################
