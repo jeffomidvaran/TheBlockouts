@@ -92,8 +92,7 @@ $$ n_{ek} = $$ total number of Endermen killed<br>
 
 $$ \text{successful reward percentage} = P =  \frac{|vn_v| + vn_{vk} + zn_{zk} + en_{ek}} {vn_{v} + zn_{z} + en_{e}} $$ 
 
-
-testing1
+<br> <br>
 <img src="images/reward_percentage_graphic1.jpg">
 <br> <br>
 
