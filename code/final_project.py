@@ -9,6 +9,7 @@ import time
 import json
 import math
 import random
+import agent_file
 
 if sys.version_info[0] == 2:
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # flush print output immediately
@@ -22,7 +23,7 @@ else:
 
 ARENA_WIDTH = 20
 ARENA_BREADTH = 20
-NUMBER_OF_REPS = 1
+NUMBER_OF_REPS = 10
 MAX_LIFE_DICT = {"Villager":20, "Zombie":20, "Enderman":40, "Creeper":20}
 
 villager_view_count_list = [] 
@@ -69,7 +70,7 @@ def shoot_arrow(cock_time=0.3):
   agent_host.sendCommand("use 1")
   time.sleep(cock_time)
   agent_host.sendCommand("use 0")
-  time.sleep(0.03)
+  time.sleep(0.05)
 
 
 def attack():
@@ -155,6 +156,39 @@ def move_and_turn_agent(e_dict, current_yaw, self_x, self_z):
 def do_nothing():
     pass
 
+def number_enemies(ob):
+    "returns the numbber o Zombies and Endermen in existence"
+    count = 0
+    for item in ob["entities"]:
+        if item["name"] == "Zombie" or item["name"] == "Enderman":
+          count += 1
+    return count
+
+def entity_in_sight(ob):
+    "returns the the entity(or block) in the agent's line of sight"
+    return ob["LineOfSight"]["type"]
+
+def take_action(action, extra):
+    "Calls for the action the agent requested"
+    if action == "bow_swipe":
+        attack_entity_with_bow_swing(extra[0], extra[1], extra[2], extra[3], extra[4])
+    elif action == "arrow_shot":
+        attack_entity_by_shooting_arrow(extra[0], extra[1], extra[2], extra[3], extra[4])
+    elif action == "change_target":
+        return switch_to_random_entity(ob)
+    return extra[1]
+
+def give_reward(state, action):
+  "returns the respective rewards for whoever the agent attacks"
+  if action == "bow_swipe" or action == "arrow_shot":
+      if state[1] == "Zombie":
+        return 10
+      elif state[1] == "Enderman":
+        return 1
+      elif state[1] == "Villager":
+        return -10
+  return 0
+
 
 def handle_line_of_site(attack_function, ob):
     if u'LineOfSight' in ob:
@@ -182,7 +216,7 @@ def attack_entity_with_bow_swing(ob, entity_dict, current_yaw, self_x, self_z):
 
 def attack_entity_by_shooting_arrow(ob, entity_dict, current_yaw, self_x, self_z):
     move_and_turn_agent(entity_dict, current_yaw, self_x, self_z)
-    handle_line_of_site(attack_entity_by_shooting_arrow, ob)
+    handle_line_of_site(shoot_arrow, ob)
 
 
 def get_agent_dict(ob):
@@ -262,12 +296,11 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
                 <AllowSpawning>true</AllowSpawning>
                 <Weather>clear</Weather>
               </ServerInitialConditions>
-
               <ServerHandlers>
                 <FlatWorldGenerator generatorString="3;7,220*1,5*3,2;3;,biome_1" forceReset="1"/>
                 <DrawingDecorator>
-                   ''' + make_enclosure(0,0,20,20,12) + ''' 
-                   ''' + spawn_multiple_enemies([["Villager", 0], ["Zombie", 1], ["Enderman", 0], ["Creeper", 0]]) + ''' 
+                   ''' + make_enclosure(0,0,20,20,12, barrier = True) + ''' 
+                   ''' + spawn_multiple_enemies([["Villager", 2], ["Zombie", 2], ["Enderman", 2], ["Creeper", 0]]) + ''' 
                 </DrawingDecorator>
                 <ServerQuitFromTimeUp timeLimitMs="''' + game_time(60) + '''"/>
                 <ServerQuitWhenAnyAgentFinishes/>
@@ -325,7 +358,7 @@ if __name__  == '__main__':
 ############################################################# 
 #################  Start of mission #########################
 ############################################################# 
-
+    agent_brain = agent_file.TabQAgent(actions = ["bow_swipe", "arrow_shot", "change_target"])
     for repeat in range(NUMBER_OF_REPS):
       villager_view_count = 0
       enderman_view_count = 0
@@ -356,6 +389,8 @@ if __name__  == '__main__':
 
 
       ####### LOOP UNTIL MISSION ENDS ##############################
+      current_r = 0
+      target = None
       while world_state.is_mission_running:
           time.sleep(0.1)
           world_state = agent_host.getWorldState()
@@ -365,32 +400,42 @@ if __name__  == '__main__':
               msg = world_state.observations[-1].text    
               ob = json.loads(msg)  
               current_yaw, self_x, self_z = get_agent_position(ob)
+              if target == None:
+                target = switch_to_random_entity(ob)
 
 
 
-
-              # ##### used to switch something every n number of seconds #########
-              # ##### an alternate to sleep when you don't want to freeze the agent's actions 
-              # t = Timer(time.time(), 2)
+              ##### used to switch something every n number of seconds #########
+              ##### an alternate to sleep when you don't want to freeze the agent's actions 
+              # t = Timer(1)
               # while(True):
               #     if(t.time_elapsed() == True):
-              #         print("over")
+              current_s = (number_enemies(ob), entity_in_sight(ob))
+              print("state and action: {}, {}".format(current_s[0], current_s[1]))
+              current_a = agent_brain.choose_action(current_s, current_r)
+              print("action taken: {}".format(current_a))
+              current_r = give_reward(current_s, current_a)
+              extra = [ob, target, current_yaw, self_x, self_z]
+              target = take_action(current_a, extra)
+
+              if target is None:
+                break
               # print("the end")
 
 
               ####### FUNCTIONS TO BE USED BY THE RL CLASS #################
-              agent_dict = get_agent_dict(ob)
-              entity_dict = switch_to_random_entity(ob)
+              # agent_dict = get_agent_dict(ob)
+              # entity_dict = switch_to_random_entity(ob)
 
-              if(entity_dict != None):
-                attack_entity_with_bow_swing(ob, entity_dict, current_yaw, self_x, self_z)
-                # attack_entity_by_shooting_arrow(ob, entity_dict, current_yaw, self_x, self_z)
-                # do_nothing()
-                # entity_died(entity_dict)
-              else: 
-                # this will be reached when there are no living entities left 
-                # except for the agent 
-                break
+              # if(entity_dict != None):
+              #   attack_entity_with_bow_swing(ob, entity_dict, current_yaw, self_x, self_z)
+              #   # attack_entity_by_shooting_arrow(ob, entity_dict, current_yaw, self_x, self_z)
+              #   # do_nothing()
+              #   # entity_died(entity_dict)
+              # else: 
+              #   # this will be reached when there are no living entities left 
+              #   # except for the agent 
+              #   break
 
       print()
       print("Mission {} ended".format(repeat))
