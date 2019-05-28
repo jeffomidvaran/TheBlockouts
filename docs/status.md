@@ -8,9 +8,6 @@ title: Status
 
 
 ## Video
-brief description of problem
-example capture of a run that is working. How you did it failures
-
 <iframe width="560" height="315" src="https://www.youtube.com/embed/wnPaqCjGIgA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
