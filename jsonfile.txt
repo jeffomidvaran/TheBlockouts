@@ -91,7 +91,7 @@
             'motionY': -0.0784000015258789, 
             'motionZ': 0.0, 
             'life': 20.0, 
-            'name': 'MalmoTutorialBot'},
+            'name': 'outAgent'},
         {
             'yaw': 0.0, 
             'x': 4.0, 
