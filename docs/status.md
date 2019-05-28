@@ -5,7 +5,7 @@ title: Status
 
 ## Project Summary
 <p>The basic idea of our project is to create a counter siege AI. Our implementation creates a clay barrier. On one side of the barrier are harmful entities (Zombies and Enderman). Zombies will rush the barrier looking for a hole while Endermen will randomly remove pieces blocks from the barrier. On the other side of barrier resides our Agent and non-harmful entities. The Agent's job will be to learn which entities are harmful and to attack these entities while leaving non-harmful entities alive.</p> 
-
+[Code Repository](https://github.com/jeffomidvaran/TheBlockouts/tree/master/docs)
 
 ## Video
 <iframe width="560" height="315" src="https://www.youtube.com/embed/wnPaqCjGIgA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
