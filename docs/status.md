@@ -92,6 +92,10 @@ $$ n_{ek} = $$ total number of Endermen killed<br>
 
 $$ \text{successful reward percentage} = P =  \frac{|vn_v| + vn_{vk} + zn_{zk} + en_{ek}} {vn_{v} + zn_{z} + en_{e}} $$ 
 
+<img src="images/reward_percentage_graph1.jpg">
+<br> <br>
+
+
 ## Remaining Goal and Challenges
 <h4>Remaining Goals</h4>
 Our remaining goal for the rest of this quarter will be to improve the effectiveness of our AI. Our current prototype is limited in that the Agent will only use the bow swing attack as opposed to shooting an arrow. This can be useful when the agent is crowded by enemies (doing damage to multiple entities at a time). However, for the final implementation we would like explore how the efficacy of shooting an arrow vs swinging the bow based on the an entities distance from the Agent. 
