@@ -96,7 +96,8 @@ $$ \text{successful reward percentage} = P =  \frac{|vn_v| + vn_{vk} + zn_{zk} +
 
 ## Remaining Goal and Challenges
 <h4>Remaining Goals</h4>
-Our remaining goal for the rest of this quarter will be to improve the effectiveness of our AI. Our current prototype is limited in that the Agent will only use the bow swing attack as opposed to shooting an arrow. This can be useful when the agent is crowded by enemies (doing damage to multiple entities at a time). However, for the final implementation we would like explore how the efficacy of shooting an arrow vs swinging the bow based on the an entities distance from the Agent. 
+Our remaining goal for the rest of this quarter will be to improve the effectiveness of our AI. When attacking the Agent does not take into account the distance from the entity that it is attacking. For the final implementation we would like explore the efficacy of shooting an arrow vs swinging the bow based on an entities distance from the Agent. 
+
 <br>
 Currently, our Agent does not fully account for the unique behavior of Endermen. Endermen are the only harmful entities in our environment that can alter the barrier (Endermen will randomly pick up blocks from the barrier and move them). They do not attack an Agent unless they are attacked first or if an Agent makes eye contact with an Endermen. Once an Endermen is attacked or makes eye contact with the Agent, it becomes far more dangerous than a Zombie. For the final implementation, we plan to explore effective ways for the Agent to learn to deal with the unique behavior of Endermen. 
 <br>
