@@ -69,9 +69,14 @@ $$ \quad Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [
 <h4>Grading Agent's choice of who to attack: </h4>
 We take multiple instances of states and resulting actions to see what was in the agent’s line of sight when they chose to attack. We grade the agent on the percentage of times a harmful entity was in the line of sight vs a non-harmful entity. This is to show that the agent learns to prioritize harmful_entities while avoiding non-harmful entities.
 
+testing
 <br><br>
 <img src="images/line_of_size_graph.jpg">
 <br><br>
+
+
+
+
 <h4>Grading Reward: </h4>
 The reward metric is a percentage. Where the Agent receives a 100% if all of the harmful entities are killed and all of the non-harmful entities are left unharmed. To calculate this metric, the following formula is applied. 
 
