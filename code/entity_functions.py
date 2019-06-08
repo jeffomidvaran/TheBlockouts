@@ -50,14 +50,15 @@ def get_entity_damage_report(ob, prev_ob):
 
     if(len(current_entities) == len(prev_entities)): # O(n) 
         for i in range(0, len(current_entities)):
-            if(current_entities[i]['life'] != prev_entities[i]['life']):
+            if('life' in current_entities[i] and 'life' in prev_entities[i] and current_entities[i]['life'] != prev_entities[i]['life']):
                 changed = prev_entities[i]['life'] - current_entities[i]['life'] 
                 damage_report[current_entities[i]['id']] = changed
 
     else: # O(n^2) handles case where an entity dies       
         for ce in current_entities:
             for pe in prev_entities:
-                if(ce["id"] == pe["id"]) and ce['life'] != pe['life']:
+                
+                if('life' in ce and 'life' in pe and ce["id"] == pe["id"]) and ce['life'] != pe['life']:
                     changed = pe['life'] - ce['life'] 
                     damage_report[ce['id']] = changed
 
