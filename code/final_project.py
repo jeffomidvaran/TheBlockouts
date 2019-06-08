@@ -25,7 +25,7 @@ else:
 ARENA_WIDTH = 20
 ARENA_BREADTH = 20
 NUMBER_OF_REPS = 1
-GAME_SECONDS = 100
+GAME_SECONDS = 10
 MAX_LIFE_DICT = {"Villager":20, "Zombie":20, "Enderman":40, "Creeper":20}
 
 villager_view_count_list = [] 
@@ -35,27 +35,6 @@ zombie_view_count_list = []
 villager_view_count = 0
 enderman_view_count = 0
 zombie_view_count  = 0
-
-
-class Timer:
-    def __init__(self, run_time):
-        self.start_time = time.time()
-        self.run_time = run_time
-        self.stop_time = self.start_time + run_time
-    
-    def time_elapsed(self):
-        if(self.stop_time <= time.time()):
-            self.start_time = time.time()
-            self.stop_time = self.start_time + self.run_time
-            return True
-        else:
-            return False
-
-
-class RL:
-    ''' Reinforcement Learner ''' 
-    def __init__(self):
-      self.reward = 0
 
 
 def game_time(seconds):
@@ -70,15 +49,16 @@ def switch_to_item(hotslot_number):
 
 
 def shoot_arrow(cock_time=0.3):
-  # agent_host.sendCommand("use 1")
-  # time.sleep(cock_time)
-  # agent_host.sendCommand("use 0")
-  # time.sleep(0.05)
+  agent_host.sendCommand("use 1")
+  time.sleep(cock_time)
+  agent_host.sendCommand("use 0")
+  time.sleep(0.05)
   pass
 
 
 def attack():
   agent_host.sendCommand("attack 1")
+  time.sleep(0.01)
 
 
 def determine_direction(x_pull, z_pull, current_yaw):
@@ -388,12 +368,7 @@ if __name__  == '__main__':
                 target = entity_functions.switch_to_random_entity(ob)
 
 
-
-              ##### used to switch something every n number of seconds #########
-              ##### an alternate to sleep when you don't want to freeze the agent's actions 
-              # t = Timer(1)
-              # while(True):
-              #     if(t.time_elapsed() == True):
+              ######### AI CODE ################
               current_s = (number_enemies(ob), entity_functions.entity_in_sight(ob))
               current_a = agent_brain.choose_action(current_s, current_r)
               current_r = give_reward(current_s, current_a)
@@ -402,23 +377,12 @@ if __name__  == '__main__':
 
               if target is None:
                 break
-              # print("the end")
 
+              ######### END AI CODE ################
 
-              ####### FUNCTIONS TO BE USED BY THE RL CLASS #################
-              # agent_dict = get_agent_dict(ob)
-              # entity_dict = switch_to_random_entity(ob)
+             
 
-              # if(entity_dict != None):
-              #   attack_entity_with_bow_swing(ob, entity_dict, current_yaw, self_x, self_z)
-              #   # attack_entity_by_shooting_arrow(ob, entity_dict, current_yaw, self_x, self_z)
-              #   # do_nothing()
-              #   # entity_died(entity_dict)
-              # else: 
-              #   # this will be reached when there are no living entities left 
-              #   # except for the agent 
-              #   break
-
+              
               
               # damage_report = entity_functions.get_entity_damage_report(ob, prev_ob)
               # if(len(damage_report) > 0): 
