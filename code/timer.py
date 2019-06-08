@@ -19,10 +19,10 @@ class Timer:
             return False
 
 
-#### example code ##### 
-if __name__  == '__main__':
-    '''take an action every n number of seconds'''
-    t = Timer(1)
-    while(True):
-        if(t.time_elapsed() == True):
-            print("timer elapsed")
+# #### example code ##### 
+# if __name__  == '__main__':
+#     '''take an action every n number of seconds'''
+#     t = Timer(1)
+#     while(True):
+#         if(t.time_elapsed() == True):
+#             print("timer elapsed")
