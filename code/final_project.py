@@ -10,6 +10,7 @@ import json
 import math
 import random
 import agent_file
+import entity_functions
 
 if sys.version_info[0] == 2:
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # flush print output immediately
@@ -23,7 +24,8 @@ else:
 
 ARENA_WIDTH = 20
 ARENA_BREADTH = 20
-NUMBER_OF_REPS = 10
+NUMBER_OF_REPS = 1
+GAME_SECONDS = 100
 MAX_LIFE_DICT = {"Villager":20, "Zombie":20, "Enderman":40, "Creeper":20}
 
 villager_view_count_list = [] 
@@ -62,15 +64,16 @@ def game_time(seconds):
 def switch_to_item(hotslot_number):
     '''Not 0 indexed 1 is the first item in the hotbar'''
     agent_host.sendCommand("hotbar." + str(hotslot_number) + " 1") #Press the hotbar key
-    agent_host.sendCommand("hotbar." + str(hotslot_number) + " 0") 
     time.sleep(0.2)
+    agent_host.sendCommand("hotbar." + str(hotslot_number) + " 0") 
 
 
 def shoot_arrow(cock_time=0.3):
-  agent_host.sendCommand("use 1")
-  time.sleep(cock_time)
-  agent_host.sendCommand("use 0")
-  time.sleep(0.05)
+  # agent_host.sendCommand("use 1")
+  # time.sleep(cock_time)
+  # agent_host.sendCommand("use 0")
+  # time.sleep(0.05)
+  pass
 
 
 def attack():
@@ -302,7 +305,7 @@ missionXML='''<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
                    ''' + make_enclosure(0,0,20,20,12, barrier = True) + ''' 
                    ''' + spawn_multiple_enemies([["Villager", 2], ["Zombie", 2], ["Enderman", 2], ["Creeper", 0]]) + ''' 
                 </DrawingDecorator>
-                <ServerQuitFromTimeUp timeLimitMs="''' + game_time(60) + '''"/>
+                <ServerQuitFromTimeUp timeLimitMs="''' + game_time(GAME_SECONDS) + '''"/>
                 <ServerQuitWhenAnyAgentFinishes/>
                 </ServerHandlers>
               </ServerSection>
@@ -391,6 +394,8 @@ if __name__  == '__main__':
       ####### LOOP UNTIL MISSION ENDS ##############################
       current_r = 0
       target = None
+      prev_ob = None
+
       while world_state.is_mission_running:
           time.sleep(0.1)
           world_state = agent_host.getWorldState()
@@ -398,7 +403,10 @@ if __name__  == '__main__':
               print("Error:",error.text)
           if world_state.number_of_observations_since_last_state > 0:
               msg = world_state.observations[-1].text    
-              ob = json.loads(msg)  
+              # ob is the data from the changing world
+              # prev_ob is the word data from the previous loop 
+              ob = json.loads(msg) 
+
               current_yaw, self_x, self_z = get_agent_position(ob)
               if target == None:
                 target = switch_to_random_entity(ob)
@@ -411,9 +419,7 @@ if __name__  == '__main__':
               # while(True):
               #     if(t.time_elapsed() == True):
               current_s = (number_enemies(ob), entity_in_sight(ob))
-              print("state and action: {}, {}".format(current_s[0], current_s[1]))
               current_a = agent_brain.choose_action(current_s, current_r)
-              print("action taken: {}".format(current_a))
               current_r = give_reward(current_s, current_a)
               extra = [ob, target, current_yaw, self_x, self_z]
               target = take_action(current_a, extra)
@@ -421,6 +427,9 @@ if __name__  == '__main__':
               if target is None:
                 break
               # print("the end")
+
+
+
 
 
               ####### FUNCTIONS TO BE USED BY THE RL CLASS #################
@@ -437,15 +446,26 @@ if __name__  == '__main__':
               #   # except for the agent 
               #   break
 
+              
+
+              damage_report = entity_functions.get_entity_damage_report(ob, prev_ob)
+
+              if(len(damage_report) > 0): 
+                print("\tdamage report = {}".format(damage_report))
+
+              prev_ob = ob # KEEP THIS AT THE END OF THE WHILE LOOP !!!! 
+
+
+
       print()
       print("Mission {} ended".format(repeat))
       villager_view_count_list.append(villager_view_count)
       enderman_view_count_list.append(enderman_view_count) 
       zombie_view_count_list.append(zombie_view_count)
 
-      print(villager_view_count_list)
-      print(enderman_view_count_list)
-      print(zombie_view_count_list)
+      print("Villager views = {}".format(villager_view_count_list))
+      print("Enderman views = {}".format(enderman_view_count_list))
+      print("Zombie views = {}".format(zombie_view_count_list))
       ##########################################################
       ###################### END OF MISSION ####################
       ##########################################################
