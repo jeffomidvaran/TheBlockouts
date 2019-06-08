@@ -1,3 +1,4 @@
+import random
 
 def switch_to_random_entity(ob):
     entities = ob["entities"]

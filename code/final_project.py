@@ -36,6 +36,7 @@ villager_view_count = 0
 enderman_view_count = 0
 zombie_view_count  = 0
 
+
 class Timer:
     def __init__(self, run_time):
         self.start_time = time.time()
@@ -124,18 +125,6 @@ def spawn_multiple_enemies(ememy_list):
   return result_string
 
 
-def switch_to_random_entity(ob):
-    entities = ob["entities"]
-    living_entities_list = []
-    for e in entities:
-      if "life" in e and e["life"] > 0: 
-        living_entities_list.append(e)
-    num_of_entities = len(living_entities_list) 
-    if(num_of_entities > 1):
-        random_index = random.randrange(1,num_of_entities)
-        return living_entities_list[random_index]
-    else:
-      return None
 
 def move_and_turn_agent(e_dict, current_yaw, self_x, self_z):
     x_pull = 0
@@ -155,10 +144,6 @@ def move_and_turn_agent(e_dict, current_yaw, self_x, self_z):
     agent_host.sendCommand("move " + str(move_speed))
 
 
-
-def do_nothing():
-    pass
-
 def number_enemies(ob):
     "returns the numbber o Zombies and Endermen in existence"
     count = 0
@@ -167,9 +152,6 @@ def number_enemies(ob):
           count += 1
     return count
 
-def entity_in_sight(ob):
-    "returns the the entity(or block) in the agent's line of sight"
-    return ob["LineOfSight"]["type"]
 
 def take_action(action, extra):
     "Calls for the action the agent requested"
@@ -178,8 +160,9 @@ def take_action(action, extra):
     elif action == "arrow_shot":
         attack_entity_by_shooting_arrow(extra[0], extra[1], extra[2], extra[3], extra[4])
     elif action == "change_target":
-        return switch_to_random_entity(ob)
+        return entity_functions.switch_to_random_entity(ob)
     return extra[1]
+
 
 def give_reward(state, action):
   "returns the respective rewards for whoever the agent attacks"
@@ -208,7 +191,6 @@ def handle_line_of_site(attack_function, ob):
       hitType=los["hitType"]
       if hitType == "entity":
         attack_function()
-        # attack()
 
 
 def attack_entity_with_bow_swing(ob, entity_dict, current_yaw, self_x, self_z):
@@ -226,12 +208,6 @@ def get_agent_dict(ob):
     ''' returns the 0th index entity which is always the agent '''
     entities = ob["entities"]
     return entities[0]
-
-def entity_died(entity_dict):
-    if(entity_dict["life"] == 0):
-      return True
-    else: 
-      return False
 
 
 def make_enclosure(start_x, start_z, end_x, end_z, height, barrier_type="clay", wall_type="bedrock", barrier=True):
@@ -409,7 +385,7 @@ if __name__  == '__main__':
 
               current_yaw, self_x, self_z = get_agent_position(ob)
               if target == None:
-                target = switch_to_random_entity(ob)
+                target = entity_functions.switch_to_random_entity(ob)
 
 
 
@@ -418,7 +394,7 @@ if __name__  == '__main__':
               # t = Timer(1)
               # while(True):
               #     if(t.time_elapsed() == True):
-              current_s = (number_enemies(ob), entity_in_sight(ob))
+              current_s = (number_enemies(ob), entity_functions.entity_in_sight(ob))
               current_a = agent_brain.choose_action(current_s, current_r)
               current_r = give_reward(current_s, current_a)
               extra = [ob, target, current_yaw, self_x, self_z]
@@ -427,9 +403,6 @@ if __name__  == '__main__':
               if target is None:
                 break
               # print("the end")
-
-
-
 
 
               ####### FUNCTIONS TO BE USED BY THE RL CLASS #################
@@ -447,14 +420,11 @@ if __name__  == '__main__':
               #   break
 
               
-
-              damage_report = entity_functions.get_entity_damage_report(ob, prev_ob)
-
-              if(len(damage_report) > 0): 
-                print("\tdamage report = {}".format(damage_report))
+              # damage_report = entity_functions.get_entity_damage_report(ob, prev_ob)
+              # if(len(damage_report) > 0): 
+              #   print("\tdamage report = {}".format(damage_report))
 
               prev_ob = ob # KEEP THIS AT THE END OF THE WHILE LOOP !!!! 
-
 
 
       print()
