@@ -26,7 +26,7 @@ else:
 
 ###### CHANGE THESE VARIABLES TO EFFECT THE NUMBER/LENGTH OF GAMES ############
 NUMBER_OF_REPS = 1
-GAME_SECONDS = 60
+GAME_SECONDS = 30
 ##########################################################################
 
 MAX_LIFE_DICT = {"Villager":20, "Zombie":20, "Enderman":40, "Creeper":20}
@@ -74,10 +74,6 @@ def attack_with_bow_swing(ob):
   attack()
 
 
-def get_distance_to_entity(ob):
-    pass
-
-
 def get_agent_position(ob):
   if u'Yaw' in ob:
       current_yaw = ob[u'Yaw']
@@ -106,20 +102,35 @@ def determine_direction(x_pull, z_pull, current_yaw):
   return difference
 
 
-def move_and_turn_agent(e_dict, current_yaw, self_x, self_z):
+def get_pull_dist_weight(e_dict, self_x, self_z):
     x_pull = 0
     z_pull = 0
-    dist = max(0.0001, (e_dict["x"] - self_x) * (e_dict["x"] - self_x) + (e_dict["z"] - self_z) * (e_dict["z"] - self_z))
-    weight = MAX_LIFE_DICT[e_dict["name"]]+1 - e_dict["life"] 
-    
-    x_pull += weight * (e_dict["x"] - self_x) / dist
-    z_pull += weight * (e_dict["z"] - self_z) / dist
+    dist = 0 
+    weight = 0
+    if(e_dict != None):
+      dist = max(0.0001, (e_dict["x"] - self_x) * (e_dict["x"] - self_x) + (e_dict["z"] - self_z) * (e_dict["z"] - self_z))
+      weight = MAX_LIFE_DICT[e_dict["name"]]+1 - e_dict["life"] 
+      x_pull += weight * (e_dict["x"] - self_x) / dist
+      z_pull += weight * (e_dict["z"] - self_z) / dist
+    return x_pull, z_pull, dist, weight
 
+
+def move_toward_entity(e_dict, current_yaw, self_x, self_z):
+    x_pull, z_pull, dist, weight = get_pull_dist_weight(e_dict, self_x, self_z)
     difference = determine_direction(x_pull, z_pull, current_yaw)
     agent_host.sendCommand("turn " + str(difference))
     # move slower when turning faster - helps with "orbiting" problem
     move_speed = 1.0 if abs(difference) < 0.5 else 0  
     agent_host.sendCommand("move " + str(move_speed))
+
+
+def move_away_from_entity(e_dict, current_yaw, self_x, self_z):
+    x_pull, z_pull, dist, weight = get_pull_dist_weight(e_dict, self_x, self_z)
+    difference = determine_direction(x_pull, z_pull, current_yaw)
+    agent_host.sendCommand("turn " + str(difference))
+    # move slower when turning faster - helps with "orbiting" problem
+    move_speed = 1.0 if abs(difference) < 0.5 else 0  
+    agent_host.sendCommand("move " + str(-move_speed))
 
 
 def number_enemies(ob):
@@ -133,12 +144,18 @@ def number_enemies(ob):
 
 def take_action(action, extra):
     "Calls for the action the agent requested"
-    if action == "bow_swipe":
-        attack_entity_with_bow_swing(extra[0], extra[1], extra[2], extra[3], extra[4])
-    elif action == "arrow_shot":
-        attack_entity_by_shooting_arrow(extra[0], extra[1], extra[2], extra[3], extra[4])
-    elif action == "sword_swipe":
-        attack_entity_with_sword(extra[0], extra[1], extra[2], extra[3], extra[4])
+    if action == "bow_swipe_forward":
+        attack_entity_with_bow_swing_move_forward(extra[0], extra[1], extra[2], extra[3], extra[4])
+    elif action == "arrow_shot_forward":
+        attack_entity_by_shooting_arrow_move_forward(extra[0], extra[1], extra[2], extra[3], extra[4])
+    elif action == "sword_swipe_forward":
+        attack_entity_with_sword_move_forward(extra[0], extra[1], extra[2], extra[3], extra[4])
+    elif action == "bow_swipe_backward":
+        attack_entity_with_bow_swing_move_backward(extra[0], extra[1], extra[2], extra[3], extra[4])
+    elif action == "sword_swipe_backward": 
+        attack_entity_by_shooting_arrow_move_backward(extra[0], extra[1], extra[2], extra[3], extra[4])
+    elif action == "arrow_shot_backward":
+        attack_entity_with_sword_move_backward(extra[0], extra[1], extra[2], extra[3], extra[4])
     elif action == "change_target":
         return entity_functions.switch_to_random_entity(ob)
     return extra[1]
@@ -173,21 +190,34 @@ def handle_line_of_site(attack_function, ob):
         attack_function(ob)
 
 
-def attack_entity_with_bow_swing(ob, entity_dict, current_yaw, self_x, self_z):
-    move_and_turn_agent(entity_dict, current_yaw, self_x, self_z)
-    life_before_attack = entity_dict["life"]
+def attack_entity_with_bow_swing_move_forward(ob, entity_dict, current_yaw, self_x, self_z):
+    move_toward_entity(entity_dict, current_yaw, self_x, self_z)
     handle_line_of_site(attack_with_bow_swing, ob)
       
 
-def attack_entity_by_shooting_arrow(ob, entity_dict, current_yaw, self_x, self_z):
-    move_and_turn_agent(entity_dict, current_yaw, self_x, self_z)
+def attack_entity_by_shooting_arrow_move_forward(ob, entity_dict, current_yaw, self_x, self_z):
+    move_toward_entity(entity_dict, current_yaw, self_x, self_z)
     handle_line_of_site(shoot_arrow, ob)
 
 
-def attack_entity_with_sword(ob, entity_dict, current_yaw, self_x, self_z):
-    move_and_turn_agent(entity_dict, current_yaw, self_x, self_z)
+def attack_entity_with_sword_move_forward(ob, entity_dict, current_yaw, self_x, self_z):
+    move_toward_entity(entity_dict, current_yaw, self_x, self_z)
     handle_line_of_site(attack_with_sword, ob)
 
+
+def attack_entity_with_bow_swing_move_backward(ob, entity_dict, current_yaw, self_x, self_z):
+    move_away_from_entity(entity_dict, current_yaw, self_x, self_z)
+    handle_line_of_site(attack_with_bow_swing, ob)
+      
+
+def attack_entity_by_shooting_arrow_move_backward(ob, entity_dict, current_yaw, self_x, self_z):
+    move_away_from_entity(entity_dict, current_yaw, self_x, self_z)
+    handle_line_of_site(shoot_arrow, ob)
+
+
+def attack_entity_with_sword_move_backward(ob, entity_dict, current_yaw, self_x, self_z):
+    move_away_from_entity(entity_dict, current_yaw, self_x, self_z)
+    handle_line_of_site(attack_with_sword, ob)
 
 ################################################################
 #################### END USER DEFINED FUNCTIONS ################
@@ -213,11 +243,14 @@ if __name__  == '__main__':
 #################  Start of mission #########################
 ############################################################# 
 
-    agent_brain = agent_file.TabQAgent(actions = ["bow_swipe", "arrow_shot", "change_target","sword_swipe"])
+    agent_brain = agent_file.TabQAgent(actions = ["change_target", 
+        "bow_swipe_forward", "arrow_shot_forward", "sword_swipe_forward", 
+        "bow_swipe_backward", "arrow_shot_backward", "sword_swipe_backward"]) 
     for repeat in range(NUMBER_OF_REPS):
       villager_view_count = 0
       enderman_view_count = 0
       zombie_view_count  = 0
+      # add number of entities here
       missionXML = world_builder.create_missionXML(2,2,2,0,GAME_SECONDS)
       my_mission = MalmoPython.MissionSpec(missionXML, True)
       my_mission_record = MalmoPython.MissionRecordSpec()
@@ -259,12 +292,12 @@ if __name__  == '__main__':
               msg = world_state.observations[-1].text    
               ob = json.loads(msg) 
 
+
+              ########## AI CODE ################
               current_yaw, self_x, self_z = get_agent_position(ob)
               if target == None:
                 target = entity_functions.switch_to_random_entity(ob)
 
-
-              ########## AI CODE ################
               if(iterations > 7): 
                   current_s = (number_enemies(ob), entity_functions.entity_in_sight(ob))
                   current_a = agent_brain.choose_action(current_s, current_r)
@@ -272,14 +305,6 @@ if __name__  == '__main__':
                   extra = [ob, target, current_yaw, self_x, self_z]
                   target = take_action(current_a, extra)
               ########## END AI CODE ################
-
-              # if(iterations > 7): 
-              #   shoot_arrow(ob)
-              #   attack_with_bow_swing(ob)
-              #   attack_with_sword(ob)
-
-
-
 
 
               ##### THESE 2 UPDATES NEED TO HAPPEN AT THE END OF EVERY LOOP !!!!!!

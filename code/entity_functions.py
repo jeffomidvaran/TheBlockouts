@@ -66,3 +66,17 @@ def get_entity_damage_report(ob, prev_ob):
     return damage_report
 
 
+def get_distance_from_entity_in_line_of_site(ob):
+  return ob['LineOfSight']['distance'] 
+
+
+def entity_within_swipe_range(ob):
+  # sword/bow swipe range = 3
+  if(ob['LineOfSight']['type'] == "Zombie" or
+    ob['LineOfSight']['type'] == "Villager" or
+    ob['LineOfSight']['type'] == "Enderman" or
+    ob['LineOfSight']['type'] == "Creeper"):
+
+    if(ob['LineOfSight']['distance'] <= 3.05):
+      return True
+  return False
