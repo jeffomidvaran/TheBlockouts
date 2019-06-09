@@ -12,6 +12,7 @@ import random
 import agent_file
 import entity_functions
 import world_builder
+import evaluation_graphs
 
 if sys.version_info[0] == 2:
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # flush print output immediately
@@ -25,7 +26,7 @@ else:
 
 
 ###### CHANGE VARIABLE FOR MULTIPLE GAMES ################################
-NUMBER_OF_REPS = 1
+# NUMBER_OF_REPS = 1
 ##########################################################################
 
 MAX_LIFE_DICT = {"Villager":20, "Zombie":20, "Enderman":40, "Creeper":20}
@@ -245,6 +246,17 @@ if __name__  == '__main__':
 #################  Start of mission #########################
 ############################################################# 
 
+    ########################################################################
+    ####### ADD GAME SETTINGS HERE #########################################
+    ########################################################################
+
+    num_of_villagers = 0
+    num_of_zombies = 2
+    num_of_enderman = 0
+    num_of_creepers = 0
+    game_time = 60
+    number_of_games = 1
+
     agent_brain = agent_file.TabQAgent(actions = [
                                                   "change_target", 
                                                   "bow_swipe_forward", 
@@ -254,17 +266,27 @@ if __name__  == '__main__':
                                                   "arrow_shot_backward",
                                                   # "sword_swipe_backward",
                                                   ])
-    for repeat in range(NUMBER_OF_REPS):
+
+    ########################################################################
+    ####### END ADD GAME SETTINGS HERE #####################################
+    ########################################################################
+
+    for repeat in range(number_of_games):
       villager_view_count = 0
       enderman_view_count = 0
       zombie_view_count  = 0
 
-      ####### ADD GAME SETTINGS HERE    (villagers, zombies, enderman, creepers, game_time)
-      missionXML = world_builder.get_XML(4,         4,       4,        0,        30)
+      missionXML = world_builder.get_XML(num_of_villagers, 
+                                         num_of_zombies, 
+                                         num_of_enderman,
+                                         num_of_creepers, 
+                                         game_time)
+
+
       my_mission = MalmoPython.MissionSpec(missionXML, True)
       my_mission_record = MalmoPython.MissionRecordSpec()
 
-      ######## Attempt to start a mission:
+      ######## Attempt to start a mission ################################
       max_retries = 3
       for retry in range(max_retries):
           try:
@@ -302,7 +324,7 @@ if __name__  == '__main__':
               ob = json.loads(msg) 
 
 
-              ########## AI CODE ################
+              ########## AI CODE #####################################
               current_yaw, self_x, self_z = get_agent_position(ob)
               if target == None:
                 target = entity_functions.switch_to_random_entity(ob)
@@ -313,10 +335,8 @@ if __name__  == '__main__':
                   current_r = give_reward(current_s, current_a)
                   extra = [ob, target, current_yaw, self_x, self_z]
                   target = take_action(current_a, extra)
-              ########## END AI CODE ################
+              ########## END AI CODE ##################################
 
-                  # damage report example can be taken out
-                  print(entity_functions.get_entity_damage_report(ob, prev_ob))
 
 
               ##### THESE 2 UPDATES NEED TO HAPPEN AT THE END OF EVERY LOOP !!!!!!
@@ -325,6 +345,14 @@ if __name__  == '__main__':
               prev_ob = ob 
               ################################################################
 
+
+      ##### EXAMPLE OF HOW TO USE THIS FUNCTION FROM EVALUATION GRAPHS
+      ##### CAN BE REMOVED
+      # result = evaluation_graphs.get_number_of_killed_entities(prev_ob['entities'],
+      #                                                 num_of_villagers, 
+      #                                                 num_of_zombies, 
+      #                                                 num_of_enderman, 
+      #                                                 num_of_creepers)
 
       print()
       print("Mission {} ended".format(repeat))
