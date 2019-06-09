@@ -56,7 +56,7 @@ def make_enclosure(start_x, start_z, end_x, end_z, height, barrier_type="clay", 
     return result_string
 
 
-def create_missionXML(num_villagers, num_zombies, num_enderman, num_creepers, game_length):
+def get_XML(num_villagers, num_zombies, num_enderman, num_creepers, game_length):
     result='''
       <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
             <Mission xmlns="http://ProjectMalmo.microsoft.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -80,7 +80,7 @@ def create_missionXML(num_villagers, num_zombies, num_enderman, num_creepers, ga
                    ''' + make_enclosure(0,0,20,20,12, barrier = True) + ''' 
                    ''' + spawn_multiple_enemies([["Villager", num_villagers], ["Zombie", num_zombies], ["Enderman", num_enderman], ["Creeper", num_creepers]]) + ''' 
                 </DrawingDecorator>
-                <ServerQuitFromTimeUp timeLimitMs="''' + game_time(game_length) + '''"/>
+                <ServerQuitFromTimeUp timeLimitMs="''' + game_time(30) + '''"/>
                 <ServerQuitWhenAnyAgentFinishes/>
                 </ServerHandlers>
               </ServerSection>

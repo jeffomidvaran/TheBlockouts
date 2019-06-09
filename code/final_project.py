@@ -24,9 +24,8 @@ else:
 ################################################################
 
 
-###### CHANGE THESE VARIABLES TO EFFECT THE NUMBER/LENGTH OF GAMES ############
+###### CHANGE VARIABLE FOR MULTIPLE GAMES ################################
 NUMBER_OF_REPS = 1
-GAME_SECONDS = 30
 ##########################################################################
 
 MAX_LIFE_DICT = {"Villager":20, "Zombie":20, "Enderman":40, "Creeper":20}
@@ -219,6 +218,9 @@ def attack_entity_with_sword_move_backward(ob, entity_dict, current_yaw, self_x,
     move_away_from_entity(entity_dict, current_yaw, self_x, self_z)
     handle_line_of_site(attack_with_sword, ob)
 
+
+
+
 ################################################################
 #################### END USER DEFINED FUNCTIONS ################
 ################################################################
@@ -243,15 +245,22 @@ if __name__  == '__main__':
 #################  Start of mission #########################
 ############################################################# 
 
-    agent_brain = agent_file.TabQAgent(actions = ["change_target", 
-        "bow_swipe_forward", "arrow_shot_forward", "sword_swipe_forward", 
-        "bow_swipe_backward", "arrow_shot_backward", "sword_swipe_backward"]) 
+    agent_brain = agent_file.TabQAgent(actions = [
+                                                  "change_target", 
+                                                  "bow_swipe_forward", 
+                                                  "arrow_shot_forward", 
+                                                  "sword_swipe_forward",
+                                                  # "bow_swipe_backward", 
+                                                  "arrow_shot_backward",
+                                                  # "sword_swipe_backward",
+                                                  ])
     for repeat in range(NUMBER_OF_REPS):
       villager_view_count = 0
       enderman_view_count = 0
       zombie_view_count  = 0
-      # add number of entities here
-      missionXML = world_builder.create_missionXML(2,2,2,0,GAME_SECONDS)
+
+      ####### ADD GAME SETTINGS HERE    (villagers, zombies, enderman, creepers, game_time)
+      missionXML = world_builder.get_XML(4,         4,       4,        0,        30)
       my_mission = MalmoPython.MissionSpec(missionXML, True)
       my_mission_record = MalmoPython.MissionRecordSpec()
 
@@ -305,6 +314,9 @@ if __name__  == '__main__':
                   extra = [ob, target, current_yaw, self_x, self_z]
                   target = take_action(current_a, extra)
               ########## END AI CODE ################
+
+                  # damage report example can be taken out
+                  print(entity_functions.get_entity_damage_report(ob, prev_ob))
 
 
               ##### THESE 2 UPDATES NEED TO HAPPEN AT THE END OF EVERY LOOP !!!!!!
