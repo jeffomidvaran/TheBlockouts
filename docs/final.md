@@ -2,6 +2,20 @@
 layout: default
 title:  Final Report
 ---
+<head>
+<link rel="stylesheet" href="highlighter/prettify.css" />
+</head>
+
+
+<pre class="prettyprint">
+(function() { 
+   var jsSyntaxHighlighting = 'rocks';
+})();
+</pre>
+
+
+<script src="highlighter/prettify.js"></script>
+<script>prettyPrint();</script
 
 ## Video
 <iframe width="560" height="315" src="https://www.youtube.com/embed/uEv_zd5c7fE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
