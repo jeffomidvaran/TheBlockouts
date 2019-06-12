@@ -33,9 +33,9 @@ $$ \text{old_q_value} + [$$\alpha \times $$ (\text{current_reward} + $$\gamma \t
 
 <strong>old_q_value</strong> represents the old value our function assigned to the previous state and action
 <br>
-<strong>$$\alpha$$</strong> represents the learning rate; how fast our function picks up on and incorporates what it observes
+<strong>alpha $$\alpha$$</strong> represents the learning rate; how fast our function picks up on and incorporates what it observes
 <br>
-<strong>$$\gamma$$</strong> represents the discount factor; how much importance we want to give to future rewards
+<strong>gamma $$\gamma$$</strong> represents the discount factor; how much importance we want to give to future rewards
 <br>
 <strong>max_q_value_for_state_x</strong> represents the maximum assigned value for the current state and all possible actions for that state.
 <br>
