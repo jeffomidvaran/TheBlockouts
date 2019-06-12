@@ -29,20 +29,21 @@ $$ \quad Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [
 
 For our project we are implementing a q-tabular reinforcement learning system inspired by assignment_2. The table is implemented as a 2-level python dictionary for states-actions and their assigned reward; any unseen state will be initialized to 0. The update function for the q-table is as follows:
 
-<pre>old_q_value + [$$\alpha \times $$ (current_reward + $$\gamma \times$$ max_q_value_for_state_x - old_q_value)]</pre>
+$$ \text{old_q_value} + [$$\alpha \times $$ (\text{current_reward} + $$\gamma \times$$ \text{max_q_value_for_state_x} - \text{old_q_value})] $$
 
 <strong>old_q_value</strong> represents the old value our function assigned to the previous state and action
+<br>
 <strong>$$\alpha$$</strong> represents the learning rate; how fast our function picks up on and incorporates what it observes
+<br>
 <strong>$$\gamma$$</strong> represents the discount factor; how much importance we want to give to future rewards
+<br>
 <strong>max_q_value_for_state_x</strong> represents the maximum assigned value for the current state and all possible actions for that state.
+<br>
 
 We have set both our alpha and gamma to 1 as we were satisfied with the performance of our agent with those values. Our agent will choose the best action for the given state (or any of the best actions at random if there are multiple best actions); an action being the best means that it has the highest assigned value for the state. We will, with some probability, epsilon, choose a random action for a state. This is to simulate an exploration of the space and fight against reach some local maxima of understanding. Our epsilon is set to 0.1 as we are satisfied with the agent's performance with that value. 
 
 
 <!-- ENTERING CODE TEST  -->
-<figure>
-  <figcaption>Your code title</figcaption>
-  <pre>
     <code>
         import random
         class TabQAgent(object):
@@ -109,8 +110,6 @@ We have set both our alpha and gamma to 1 as we were satisfied with the performa
 
                 return a
     </code>
-  </pre>
-</figure>
 
 
 <h4> Our states will consist of the following: </h4>
