@@ -2,20 +2,14 @@
 layout: default
 title:  Final Report
 ---
-<head>
-<link rel="stylesheet" href="highlighter/prettify.css" />
-</head>
 
 
-<pre class="prettyprint">
-(function() { 
-   var jsSyntaxHighlighting = 'rocks';
-})();
-</pre>
+<code>
+import math
+for i in range(10):
+print("yes")
+</code>
 
-
-<script src="highlighter/prettify.js"></script>
-<script>prettyPrint();</script
 
 ## Video
 <iframe width="560" height="315" src="https://www.youtube.com/embed/uEv_zd5c7fE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -58,11 +52,7 @@ We have set both our alpha and gamma to 1 as we were satisfied with the performa
 
 
 <!-- ENTERING CODE TEST  -->
-<code>
-import math
-for i in range(10):
-    print("yes")
-</code>
+
 
 
 <h4> Our states will consist of the following: </h4>
