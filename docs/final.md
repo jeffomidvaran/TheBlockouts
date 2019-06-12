@@ -10,7 +10,7 @@ title:  Final Report
 ## Project Summary
 <p>
 The idea of our project is to create a counter siege AI that learns to both demarcate between "enemy" and "good" entities as well as using its knowledge of its weapon inventory to kill as many enemies as possible. The agent will start on one side of a clay barrier and be equipped with a bow (and arrow) and sword. The side of the barrier opposite to the agent will be filled with "enemy" entities, specifically endermen and zombies. Zombies will look for holes in the barrier to rush created by the Endermen who will randomly remove block pieces from the from the barrier. On the same side of the barrier as the agent will be "good" entities, specifically villagers. The agent should learn not kill any villagers.
-
+<br>
 While our agent can eventually implicitly differentiate between an enemy and good entity, the focus of the project is to have the agent demonstrate weapon-use intelligence as noted in the first paragraph. When the agent determines which entity should be classified as a threat, it must know how to respond. A sword swing for example, is the much preferred choice when directly in front of an enemy because a sword swipe can damage multiple enemies. A bow is less preferable because it can only strike a single entity at a time. It does become preferable, however, when its target entity is far enough away. These 2 weapon-use ideas (sword and bow) would be tedious, but possible to implement explicitly. However, explicit implementation becomes impractical quickly when adding more weapons. </p>
 [Code Repository](https://github.com/jeffomidvaran/TheBlockouts)
 
@@ -44,72 +44,72 @@ We have set both our alpha and gamma to 1 as we were satisfied with the performa
 
 
 <!-- ENTERING CODE TEST  -->
-    <code>
-        import random
-        class TabQAgent(object):
-            def __init__(self, actions=[], epsilon=0.1, alpha=0.1, gamma=1.0):
-                #initializing all relevant variables for q learning
-                self.epsilon = epsilon
-                self.alpha = alpha
-                self.gamma = gamma
+<code>
+import random
+class TabQAgent(object):
+    def __init__(self, actions=[], epsilon=0.1, alpha=0.1, gamma=1.0):
+        #initializing all relevant variables for q learning
+        self.epsilon = epsilon
+        self.alpha = alpha
+        self.gamma = gamma
 
-                self.actions = actions
-                self.q_table = {}
+        self.actions = actions
+        self.q_table = {}
 
-                self.prev_s = None
-                self.prev_a = None
+        self.prev_s = None
+        self.prev_a = None
 
-                self.total_reward = 0
-
-
-            def choose_action(self, current_s, current_r):
-                "Q Learning implementation for our Agent"
-
-                #Records total reward earned in the game
-                self.total_reward += current_r
-
-                #add state/action to q_table if not already inside
-                if current_s not in self.q_table:
-                    self.q_table[current_s] = {}
-                    for action in self.actions:
-                        self.q_table[current_s][action] = 0
+        self.total_reward = 0
 
 
-                # update Q values with our update function using our alpha and gamma 
-                max_value = 0
-                for action in self.q_table[current_s]:
-                    if self.q_table[current_s][action] > max_value:
-                        max_value = self.q_table[current_s][action]
+    def choose_action(self, current_s, current_r):
+        "Q Learning implementation for our Agent"
 
-                if self.prev_s and self.prev_a:
-                    old_q = self.q_table[self.prev_s][self.prev_a]
-                    self.q_table[self.prev_s][self.prev_a] = old_q + self.alpha * (current_r
-                        + self.gamma * max_value - old_q)
+        #Records total reward earned in the game
+        self.total_reward += current_r
 
-                #choose either a random action with some probability (epsilon) or any move with the highest q value
-                a = 0
-                rnd = random.random()
-                if rnd < self.epsilon:
-                    a = self.actions[random.randint(0, len(self.actions) - 1)]
-                else:
-                    max_value = 0
-                    for action in self.q_table[current_s]:
-                        if self.q_table[current_s][action] > max_value:
-                            max_value = self.q_table[current_s][action]
-
-                    best_actions = []
-                    for action in self.actions:
-                        if self.q_table[current_s][action] == max_value:
-                            best_actions.append(action)
-
-                    a = best_actions[random.randint(0, len(best_actions) - 1)]
+        #add state/action to q_table if not already inside
+        if current_s not in self.q_table:
+            self.q_table[current_s] = {}
+            for action in self.actions:
+                self.q_table[current_s][action] = 0
 
 
-                self.prev_s = current_s
-                self.prev_a = a
+        # update Q values with our update function using our alpha and gamma 
+        max_value = 0
+        for action in self.q_table[current_s]:
+            if self.q_table[current_s][action] > max_value:
+                max_value = self.q_table[current_s][action]
 
-                return a
-    </code>
+        if self.prev_s and self.prev_a:
+            old_q = self.q_table[self.prev_s][self.prev_a]
+            self.q_table[self.prev_s][self.prev_a] = old_q + self.alpha * (current_r
+                + self.gamma * max_value - old_q)
+
+        #choose either a random action with some probability (epsilon) or any move with the highest q value
+        a = 0
+        rnd = random.random()
+        if rnd < self.epsilon:
+            a = self.actions[random.randint(0, len(self.actions) - 1)]
+        else:
+            max_value = 0
+            for action in self.q_table[current_s]:
+                if self.q_table[current_s][action] > max_value:
+                    max_value = self.q_table[current_s][action]
+
+            best_actions = []
+            for action in self.actions:
+                if self.q_table[current_s][action] == max_value:
+                    best_actions.append(action)
+
+            a = best_actions[random.randint(0, len(best_actions) - 1)]
+
+
+        self.prev_s = current_s
+        self.prev_a = a
+
+        return a
+</code>
 
 
 <h4> Our states will consist of the following: </h4>
