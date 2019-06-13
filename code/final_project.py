@@ -12,7 +12,7 @@ import random
 import agent_file
 import entity_functions
 import world_builder
-import evaluation_graphs
+# import evaluation_graphs
 
 if sys.version_info[0] == 2:
     sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)  # flush print output immediately
@@ -29,7 +29,7 @@ else:
 # NUMBER_OF_REPS = 1
 ##########################################################################
 
-MAX_LIFE_DICT = {"Villager":20, "Zombie":20, "Enderman":40, "Creeper":20}
+MAX_LIFE_DICT = {"Villager":20, "Zombie":20, "Enderman":40, "Creeper":20, "ourAgent":100}
 villager_view_count_list = [] 
 enderman_view_count_list = [] 
 zombie_view_count_list = [] 
@@ -49,7 +49,9 @@ def switch_to_item(hotslot_number):
 
 def attack():
   agent_host.sendCommand("attack 1")
-  time.sleep(0.01)
+  time.sleep(0.03)
+  agent_host.sendCommand("attack 0")
+  time.sleep(0.05)
 
 
 def shoot_arrow(ob, cock_time=0.3):
@@ -141,8 +143,14 @@ def number_enemies(ob):
           count += 1
     return count
 
+def get_entity_dict(ob, id):
+  for dic in ob["entities"]:
+    if dic["id"] == id:
+      return dic
+  return None
 
-def take_action(action, extra):
+
+def take_action(ob, action, extra):
     "Calls for the action the agent requested"
     if action == "bow_swipe_forward":
         attack_entity_with_bow_swing_move_forward(extra[0], extra[1], extra[2], extra[3], extra[4])
@@ -153,11 +161,14 @@ def take_action(action, extra):
     elif action == "bow_swipe_backward":
         attack_entity_with_bow_swing_move_backward(extra[0], extra[1], extra[2], extra[3], extra[4])
     elif action == "sword_swipe_backward": 
-        attack_entity_by_shooting_arrow_move_backward(extra[0], extra[1], extra[2], extra[3], extra[4])
-    elif action == "arrow_shot_backward":
         attack_entity_with_sword_move_backward(extra[0], extra[1], extra[2], extra[3], extra[4])
+    elif action == "arrow_shot_backward":
+        attack_entity_by_shooting_arrow_move_backward(extra[0], extra[1], extra[2], extra[3], extra[4])
     elif action == "change_target":
         return entity_functions.switch_to_random_entity(ob)
+        time.sleep(0.03)
+    elif action == "do_nothing":
+        time.sleep(0.03)
     return extra[1]
 
 
@@ -171,6 +182,34 @@ def give_reward(state, action):
       elif state[1] == "Villager":
         return -10
   return 0
+
+def give_reward_updated(state, action, d_ene, d_good, d_neu):
+  reward = 0
+  reward += (10 * d_ene)
+  reward += (-10 * d_good)
+  reward += (1 * d_neu)
+
+  if action in ["arrow_shot_forward", "sword_swipe_forward", 
+    "arrow_shot_backward", "sword_swipe_backward"]:
+    if state[1] == "Zombie":
+      reward += 0.1
+    elif state[1] == "Enderman":
+      reward += 0.01
+    elif state[1] == "Villager":
+      reward += -0.1
+
+  if action == "change_target":
+    reward -= 2
+
+  return reward
+
+
+def how_many_damaged(ob, dr, kind):
+  damaged = 0
+  for ent in dr:
+    if entity_functions.get_entity_type(ent, ob) == kind:
+      damaged += 1
+  return damaged
 
 
 def handle_line_of_site(attack_function, ob):
@@ -250,22 +289,15 @@ if __name__  == '__main__':
     ####### ADD GAME SETTINGS HERE #########################################
     ########################################################################
 
-    num_of_villagers = 0
-    num_of_zombies = 2
-    num_of_enderman = 0
+    num_of_villagers = 4
+    num_of_zombies = 4
+    num_of_enderman = 2
     num_of_creepers = 0
     game_time = 60
-    number_of_games = 1
+    number_of_games = 10
 
-    agent_brain = agent_file.TabQAgent(actions = [
-                                                  "change_target", 
-                                                  "bow_swipe_forward", 
-                                                  "arrow_shot_forward", 
-                                                  "sword_swipe_forward",
-                                                  # "bow_swipe_backward", 
-                                                  "arrow_shot_backward",
-                                                  # "sword_swipe_backward",
-                                                  ])
+    agent_brain = agent_file.TabQAgent(actions = ["change_target", "arrow_shot_forward", "sword_swipe_forward", "do_nothing"])
+
 
     ########################################################################
     ####### END ADD GAME SETTINGS HERE #####################################
@@ -312,8 +344,10 @@ if __name__  == '__main__':
       ####### LOOP UNTIL MISSION ENDS ##############################
       current_r = 0
       target = None
+      target_id = ""
       prev_ob = None
       iterations = 0
+
       while world_state.is_mission_running:
           time.sleep(0.1)
           world_state = agent_host.getWorldState()
@@ -323,18 +357,38 @@ if __name__  == '__main__':
               msg = world_state.observations[-1].text    
               ob = json.loads(msg) 
 
-
+              # print(iterations)
               ########## AI CODE #####################################
               current_yaw, self_x, self_z = get_agent_position(ob)
               if target == None:
                 target = entity_functions.switch_to_random_entity(ob)
 
               if(iterations > 7): 
-                  current_s = (number_enemies(ob), entity_functions.entity_in_sight(ob))
+                  swipe_range = entity_functions.entity_within_swipe_range(ob)
+
+                  current_s = (number_enemies(ob), entity_functions.entity_in_sight(ob), swipe_range)
+
                   current_a = agent_brain.choose_action(current_s, current_r)
-                  current_r = give_reward(current_s, current_a)
+
+                  prev_ob = ob
+
                   extra = [ob, target, current_yaw, self_x, self_z]
-                  target = take_action(current_a, extra)
+                  target = take_action(ob, current_a, extra)
+
+
+                  #####Begin refresh frame###############
+                  world_state = agent_host.getWorldState()
+                  if world_state.number_of_observations_since_last_state > 0:
+                    msg = world_state.observations[-1].text 
+                    ob = json.loads(msg)
+                  #####End refresh frame################
+
+                  dr = entity_functions.get_entity_damage_report(ob, prev_ob)
+                  damaged_enemies = sum([how_many_damaged(prev_ob, dr, x) for x in ["Zombie", "Creeper"]])
+                  damaged_good = how_many_damaged(prev_ob, dr, "Villager")
+                  damaged_neutrals = how_many_damaged(prev_ob, dr, "Enderman")
+
+                  current_r = give_reward_updated(current_s, current_a, damaged_enemies, damaged_good, damaged_neutrals)
               ########## END AI CODE ##################################
 
 
@@ -342,7 +396,6 @@ if __name__  == '__main__':
               ##### THESE 2 UPDATES NEED TO HAPPEN AT THE END OF EVERY LOOP !!!!!!
               ##### SO BE CAREFUL ADDING BREAKS CAUSE IT CAN CAUSE ISSUES !!!!!
               iterations += 1
-              prev_ob = ob 
               ################################################################
 
 

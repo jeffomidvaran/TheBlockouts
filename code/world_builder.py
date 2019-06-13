@@ -80,7 +80,7 @@ def get_XML(num_villagers, num_zombies, num_enderman, num_creepers, game_length)
                    ''' + make_enclosure(0,0,20,20,12, barrier = True) + ''' 
                    ''' + spawn_multiple_enemies([["Villager", num_villagers], ["Zombie", num_zombies], ["Enderman", num_enderman], ["Creeper", num_creepers]]) + ''' 
                 </DrawingDecorator>
-                <ServerQuitFromTimeUp timeLimitMs="''' + game_time(30) + '''"/>
+                <ServerQuitFromTimeUp timeLimitMs="''' + game_time(game_length) + '''"/>
                 <ServerQuitWhenAnyAgentFinishes/>
                 </ServerHandlers>
               </ServerSection>

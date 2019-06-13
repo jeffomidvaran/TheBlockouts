@@ -48,7 +48,7 @@ class TabQAgent(object):
         if rnd < self.epsilon:
             a = self.actions[random.randint(0, len(self.actions) - 1)]
         else:
-            max_value = 0
+            max_value = -1 * float("inf")
             for action in self.q_table[current_s]:
                 if self.q_table[current_s][action] > max_value:
                     max_value = self.q_table[current_s][action]

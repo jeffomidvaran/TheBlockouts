@@ -1,12 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-''' 
-If you can turn the following into functions that are usable
-in final_project.py that would be super helpful
-If there any other evaluations that you can think of that would be awesome 
-as well. 
-''' 
 
 ##### code for part 1 evaluation #######
 '''
@@ -16,30 +10,57 @@ We take multiple instances of states and resulting actions to see what was in th
 '''
 
 
-number_of_games = 10
+number_of_games = 20
 graph_size_array = np.arange(number_of_games)
 
 
-zombie = np.array([90, 114, 170, 201, 211, 230, 241, 240, 245, 242])
-villager = np.array([60, 54, 35, 40, 33, 17, 21, 18, 19 , 20])
-enderman = np.array([40, 36, 25, 30, 24, 10, 19, 16, 14, 13])
+zombie = np.array([8, 21, 26, 52, 33, 58, 51, 54, 66, 65, 73, 67, 76, 66, 53, 55, 46, 48, 67, 56])
+villager = np.array([0, 1, 3, 0, 3, 0, 1, 12, 7, 2, 0, 1, 0, 0, 0, 6, 1, 2, 0, 0])
+enderman = np.array([13, 9, 5, 7, 2, 22, 3, 2, 9, 10, 7, 8, 12, 4, 3, 2, 5, 1, 10, 6])
+shotsfired = np.array([28, 30, 15, 65, 29, 58, 47, 64, 56, 72, 61, 53, 81, 62, 62, 48, 44, 47, 49, 47])
+swordSwings = np.array([17, 18, 26, 25, 18, 31, 34, 20, 36, 18, 30, 42, 36, 22, 16, 23, 16, 13, 41, 27])
+bowSwings = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 
-reward_percentages = np.array([0.30321, 0.36434, 0.34214, 0.40398, 0.56786, 0.66545, 0.68934, 0.68932, 0.75476, 0.74353])
 
-plt.subplot(2, 1, 1)
+#reward_percentages = np.array([0.30321, 0.36434, 0.34214, 0.40398, 0.56786, 0.66545, 0.68934, 0.68932, 0.75476, 0.74353])
+
+reward_per_mission = np.array([116.93, 92.08999999999999, 78.35, 373.2699999999999, 67.01999999999998, 244.01999999999967, 395.0300000000002, 282.2199999999999, 233.9899999999998, 280.39999999999975, 317.3699999999999, 344.68000000000006, 325.7200000000001, 340.63999999999993, 359.3299999999998, 174.91999999999987, 142.54999999999993, 150.60999999999987, 258.79999999999995, 213.65999999999985])
+cumulative_reward = np.array([116.93, 209.01999999999992, 287.3699999999999, 660.640000000001, 727.6600000000017, 971.6800000000028, 1366.7100000000019, 1648.929999999998, 1882.9199999999926, 2163.319999999987, 2480.689999999982, 2825.3699999999776, 3151.0899999999733, 3491.729999999968, 3851.059999999964, 4025.97999999996, 4168.529999999963, 4319.13999999998, 4577.940000000007, 4791.600000000029])
+
+#plt.subplot(4, 1, 1)
+plt.figure(1)
 plt.plot(graph_size_array, zombie, label="Zombies")
 plt.plot(graph_size_array, villager, label="Villagers")
 plt.plot(graph_size_array, enderman, label="Endermen")
 plt.legend(loc="upper left")
 plt.title('Line of Site Count')
 plt.xlabel('Number of Games')
-plt.ylabel('Number Of Times Entitiy In Focus in a 1 Minute Game')
+plt.ylabel('Entitiy In Focus per Game')
 
-plt.subplot(2, 1, 2)
-plt.plot(graph_size_array, reward_percentages, '.-')
+#plt.subplot(4, 1, 2)
+plt.figure(2)
+plt.plot(graph_size_array, cumulative_reward, '.-')
 plt.xlabel('Number of Games')
-plt.ylabel('Reward Percentage')
-plt.title('Reward Percentage Over Game')
+plt.ylabel('cumulative reward')
+plt.title('Cumulative Reward vs Game')
+
+#plt.subplot(4, 1, 3)
+plt.figure(3)
+plt.plot(graph_size_array, reward_per_mission, '.-')
+plt.xlabel('Number of Games')
+plt.ylabel('reward')
+plt.title('Reward per Game')
+
+
+#plt.subplot(4,1,4)
+plt.figure(4)
+plt.plot(graph_size_array,shotsfired,label="Arrows Fired")
+plt.plot(graph_size_array,swordSwings,label="Sword Swings")
+#plt.plot(graph_size_array,bowSwings,label="Bow Swings")
+plt.legend(loc="upper left")
+plt.title('Attacks per Game')
+plt.xlabel('Number of Games')
+plt.ylabel('Times Agent Tried to Attack')
 
 plt.show()
 
@@ -50,10 +71,6 @@ Grading Reward:
     these functions below should help implementing this 
         get_number_of_killed_entites()
         successful_reward_percentage()
-
-
-THIS HAS NOT YET BEEN IMPLEMENTED OR TESTED (it's more of an idea)
-if you can get it to work great or if you have other ideas that's great too
 
 
 FROM THE STATUS PAGE(see webpage for full details)
