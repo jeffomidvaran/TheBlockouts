@@ -43,23 +43,24 @@ $$ \text{old_q_value} + [$$\alpha \times $$ (\text{current_reward} + $$\gamma \t
 
 We have set both our alpha and gamma to 1 as we were satisfied with the performance of our agent with those values. Our agent will choose the best action for the given state (or any of the best actions at random if there are multiple best actions); an action being the best means that it has the highest assigned value for the state. We will, with some probability, epsilon, choose a random action for a state. This is to simulate an exploration of the space and fight against reach some local maxima of understanding. Our epsilon is set to 0.1 as we are satisfied with the agent's performance with that value. 
 
-
-<!-- ENTERING CODE TEST  -->
 <script src="https://gist.github.com/jeffomidvaran/26d046921d2b7e894a3b2c2f9d78dbab.js"></script>
 
 
 <h4> Our states will consist of the following: </h4>
+
 <ul>
-    <li>Are there currently any zombies, endermen, or villagers alive (boolean)</li>
-    <li>What type of entity is in the agent’s line of sight (entity_dictionary)</li>
+    <li>The number of zombies alive (integer). This is useful for the agent to know if there are any enemy targets left. For example, the agent shouldn’t hit a villager so if it was targeting one and knew there were enemies alive, it would learn to switch targets</li>
+    <li>What type of entity is in the agent’s line of sight (string). This is so the agent knows what it’s attacking; it will be able to deduce that when facing a villager, it’s a bad idea to attack while when facing a zombie, it’s a good idea</li>
+    <li>Is the entity the agent is facing within attacking distance (boolean). Knowing whether a sword swing should go through will be useful to the agent so it will be better informed whether or not it’s worth swinging</li>
 </ul>
 
 
 <h4>Our action states will consist of the following:</h4>
 <ul>
     <li>Attacking with the swing of a bow (the agent will move to the entity in line of sight and start swiping at it with a bow)</li>
-    <li>Attacking by shooting an arrow (the agent will move to the entity in the line of sight and start shooting arrows)</li>
-    <li>Targeting a random entity (the agent will switch focus to an entity in the current line of sight)</li>
+    <li>Attacking by swinging the sword (the agent will move towards the entity it’s targeting and swing the sword once). The agent will have the ability to attack multiple enemies up close</li>
+    <li>Attacking by shooting an arrow (the agent will move to the entity it’s targeting and fire an arrow). The agent will have the ability to attack from a distance in cases where it can’t throw a sword swipe</li>
+    <li>Targeting a random entity (the agent will switch focus to an entity in the current line of sight). The agent will have the ability to switch targets if it’s current target is an entity it doesn’t want to attack</li>
     <li>Doing nothing (the agent will wait for the next agent action sequence)</li>
 </ul>
 
@@ -76,15 +77,25 @@ We have set both our alpha and gamma to 1 as we were satisfied with the performa
     <li>Dealing damage to a zombie: 10</li>
     <li>Dealing damage to an endermen: 1</li>
     <li>Dealing damage to a villager: -10</li>
+    <li>Intent to attack a Zombie: 0.1</li>
+    <li>Intent to attack a Enderman: 0.01</li>
+    <li>Intent to attack a Villager: -0.1</li>
+    <li>Changing targets: -2</li>
 </ul>
 
 
 <h4>Goal:</h4>
-<p>Kill as many bad entities as possible (Zombies and Enderman) while leaving Villagers unharmed. Learn effective attacks with a bow and arrow and sword factoring in distance from harmful entities. </p>
+<p>Kill as many bad entities as possible (Zombies and Enderman) while leaving Villagers unharmed. Learn to effectively do the most damage in the least amount of time by properly using the sword and bow when optimal. </p>
 
 
 <h4>Environment: </h4>
 <p>The environment will be set as a box-like cave with a barrier separating the Agent and Villagers from the Zombies and Enderman. Enderman have the ability to remove blocks from the barrier protecting the Agent and Villagers. The Agent will be equipped with a bow-and-arrow and will have the ability to swipe the bow and fire arrows. The environment will have a set number of Zombies, Endermen, and Villagers. </p>
+
+
+<h4>Idea of Approach:</h4>
+<p>We want the agent to learn to kill the most enemies it can. We set the reward for Zombies to 10 so the agent is most incentivized to go after them. Endermen are set to 1 because we rather the agent not prioritize them because they are the most dangerous. It’s not unreasonable for the agent to die after engaging the endermen. We do, however, want the agent to go after the endermen if there’s no other enemies left which is why the reward value is positive. We don’t want the agent to be attacking the villagers in any circumstance so the reward is -10. For all entities, we also reward based on intent. This is so the agent picks up quicker what it should be prioritizing. Without these incentives, the agent might get caught in a loop of doing nothing because at game start, it isn’t able to do any damage and receive a reward. The incentive is 100x less, though, so the agent doesn’t try to reward hack- making an intent to attack an entity it is unable to reach to get reward when doing nothing useful. Changing targets is valued at -2 because it takes the agent time to do this; it should only do this when it’s targeting a villager, which has a reward of -10. Switching will be worth it in that case, but a waste of time otherwise. The agent should learn when it’s best to fire an arrow, which is usually when the target is further away when a sword swipe won’t reach. A sword swipe is incentivized when possible though, as it allows the agent to receive much more reward from attacking multiple entities than from an arrow shot which harms a single target.
+</p>
+
 
 
 
