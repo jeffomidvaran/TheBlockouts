@@ -62,7 +62,7 @@ We have set both our alpha and gamma to 1 as we were satisfied with the performa
     <li>Targeting a random entity (the agent will switch focus to an entity in the current line of sight). The agent will have the ability to switch targets if it’s current target is an entity it doesn’t want to attack</li>
     <li>Doing nothing (the agent will wait for the next agent action sequence)</li>
 </ul>
-
+<script src="https://gist.github.com/jeffomidvaran/e2e4fc9d94ffbc83456066314b622b12.js"></script>
 
 <h4> Terminating States: </h4>
 <ul>
