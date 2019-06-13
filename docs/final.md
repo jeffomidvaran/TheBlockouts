@@ -160,5 +160,4 @@ From our combat graphs, we can see that the agent knows it should be fighting zo
 - [tabular_q_learning.py](https://github.com/microsoft/malmo/blob/master/Malmo/samples/Python_examples/tabular_q_learning.py)
 - [hit_test.py](https://github.com/microsoft/malmo/blob/master/Malmo/samples/Python_examples/hit_test.py)
 - [Microsoft XML Schema documentation](https://microsoft.github.io/malmo/0.30.0/Schemas/MissionHandlers.html)
-<br>
-assigment_2.py
+- [assignment_2](https://canvas.eee.uci.edu/courses/15949/quizzes/57139)
