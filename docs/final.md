@@ -4,8 +4,6 @@ title:  Final Report
 ---
 
 
-https://github.com/jeffomidvaran/TheBlockouts/blob/a21b3f61c5986dd11d0ab9c73ff0c93bfdd12f97/code/agent_file.py#L3-L67
-
 ## Video
 <iframe width="560" height="315" src="https://www.youtube.com/embed/uEv_zd5c7fE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
