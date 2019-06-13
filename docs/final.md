@@ -106,7 +106,7 @@ Without the reward for intent, the agent would take far longer to understand tha
 
 
 ## Evaluation
-<img src="images/Figure_org.jpg">
+<img src="images/Figure_1_org.jpg">
 <p>
 ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
 ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
