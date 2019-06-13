@@ -137,10 +137,9 @@ $$ n_{zk} = $$ total number of zombies killed<br>
 $$ n_{ek} = $$ total number of Endermen killed<br>
 
 $$ \text{successful reward percentage} = P =  \frac{|vn_v| + vn_{vk} + zn_{zk} + en_{ek}} {vn_{v} + zn_{z} + en_{e}} $$ 
-
+<br> 
 
 <h4>Conclusion</h4>
-<img src="images/Figure_4.jpg">
 <p>
 From our combat graphs we can see the agent knows it should be fighting zombies more than any other entity. We also see that it learns that the bow is more effective than the sword for damaging the zombies as much as possible. The agent clearly has learned what it should be doing and what actions tend to work to do the most damage. From the rewards graph we see, that despite seeming to have learned to fight zombies and that bows are a faster way to hit them usually, the agent had not developed a strategy that would be effective at ensuring it killed every zombie. In conclusion, the agent seems to have learned that it needs to fight and that when it fights it needs prioritize particular enemies over others. It knows what it must do, but does not know exactly how it must do it.
 </p>
