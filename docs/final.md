@@ -40,7 +40,7 @@ $$ \text{old_q_value} + [\alpha \times (\text{current_reward} + \gamma \times \t
 <strong>max_q_value_for_state_x</strong> represents the maximum assigned value for the current state and all possible actions for that state.
 <br>
 
-We have set both our alpha and gamma to 1 as we were satisfied with the performance of our agent with those values. Our agent will choose the best action for the given state (or any of the best actions at random if there are multiple best actions); an action being the best means that it has the highest assigned value for the state. We will, with some probability, epsilon, choose a random action for a state. This is to simulate an exploration of the space and fight against/reach some local maxima of understanding. Our epsilon is set to 0.1 as we are satisfied with the agent's performance with that value. 
+We have set both our alpha and gamma to 1 as we were satisfied with the performance of our agent with those values. Our agent will choose the best action for the given state (or any of the best actions at random if there are multiple best actions); an action being the best means that it has the highest assigned value for the state. We will, with some probability, epsilon, choose a random action for a state. This is to simulate an exploration of the space and fight against &sol;reach some local maxima of understanding. Our epsilon is set to 0.1 as we are satisfied with the agent's performance with that value. 
 
 <script src="https://gist.github.com/jeffomidvaran/26d046921d2b7e894a3b2c2f9d78dbab.js"></script>
 
