@@ -97,11 +97,11 @@ We have set both our alpha and gamma to 1 as we were satisfied with the performa
 </p>
 
 <h4>Biggest Advantage:</h4>
-Our agent’s understanding of the weapons is implicit, this is highly useful if we decide to add more weapons; the reward speaks for itself
+Our agent’s understanding of the weapons is implicit, this is highly useful if we decide to add more weapons; the reward speaks for itself.
 
 
 <h4>Biggest Disadvantages:</h4>
-Without the reward for intent, the agent would take far longer to understand that it should attack endermen and zombies while leaving villagers alone. A q learning implementation restricts the complexity of the agent because it won’t be able to finely tune everything a player can do because of its limited state and action space
+Without the reward for intent, the agent would take far longer to understand that it should attack endermen and zombies while leaving villagers alone. A Q-learning implementation restricts the complexity of the agent because it won’t be able to finely tune everything a player can do because of its limited state and action space.
 
 
 ## Evaluation
