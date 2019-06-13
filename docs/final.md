@@ -103,15 +103,26 @@ Our agent’s understanding of the weapons is implicit, this is highly useful if
 Without the reward for intent, the agent would take far longer to understand that it should attack endermen and zombies while leaving villagers alone. A q learning implementation restricts the complexity of the agent because it won’t be able to finely tune everything a player can do because of its limited state and action space
 
 
-
 ## Evaluation
-<img src="images/Figure_1_org.jpg">
-<img src="images/Figure_2.jpg">
-<img src="images/Figure_3.jpg">
-<img src="images/Figure_4.jpg">
+<h4>Measuring Target Selection</h4>
 <p>
-ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
+To evaluate if our agent is able to distinguish between which entities are dangerous and which are best ignored, we kept track of which entities it tended to focus on most during each game, meaning it ensured it stayed facing them and tracked them. As can be seen from the Line of Site Count Graph, the agent very quickly learned that Zombies are a primary target and should be attacked as much as possible. The agent learns villagers pose no threat to it and attacking them is not very helpful, since it only focuses on them a few times in any mission. Endermen are not particularly aggressive despite being an enemy so they should not be a primary focus of the agent, but it should be wary of them. The agent seems to be successful in learning this as it does not focus on Endermen very much, but is still focusing on them more than the villagers.
 </p>
+<img src="images/Figure_1_org.jpg">
+
+
+<h4>Quantifying Combat Strategy</h4>
+<p>
+To see what type of strategy it was developing we kept track of which attacks it tried when trying to fight an entity and how often each attack was used. As we see it very strongly favors firing arrows at enemies, and learns to do so very quickly. It often would try shoot enemies from its spawn point to try and maximize its reward as much as possible. This is a very good strategy since the arrow allows for the agent to attack enemies much faster since it does not need them to get close to it to be able to fight them. The agent would get the most rewards whenever it would successfully hit an enemy and the bias towards long reach and fast engagement is appropriate for our task.
+</p>
+<img src="images/Figure_2.jpg">
+
+
+<h4>Quantifying Combat Effectiveness and Efficiency</h4>
+<p>
+To see if the agent was actually developing an effective strategy we plotted the total reward at the end of each mission. The agent was given +10 for damaging a zombie, +1 for damaging an enderman, -10 for damaging a villager, +.1 for trying to attack a zombie(but not necessarily damaging, +.01 for trying to attack an enderman, and -.1 for trying to attack a villager. As we can see from the graph, the agent does not converge on a particular value. This suggests to us that it could not develop an effective strategy for fighting the enemies in the environment. We do see that it stayed above 150 so it did learn some beginnings of a strategy but it could not get to the point of finding the single most effective strategy for the problem.
+</p>
+<img src="images/Figure_3.jpg">
 
 $$ v $$ = number of attacks needed to kill villager * reward for hitting villager<br>
 $$ z $$ = number of attacks needed to kill zombie * reward for hitting zombie<br>
@@ -127,9 +138,16 @@ $$ n_{ek} = $$ total number of Endermen killed<br>
 
 $$ \text{successful reward percentage} = P =  \frac{|vn_v| + vn_{vk} + zn_{zk} + en_{ek}} {vn_{v} + zn_{z} + en_{e}} $$ 
 
-<br> <br>
+
+<h4>Conclusion</h4>
+<img src="images/Figure_4.jpg">
+<p>
+From our combat graphs we can see the agent knows it should be fighting zombies more than any other entity. We also see that it learns that the bow is more effective than the sword for damaging the zombies as much as possible. The agent clearly has learned what it should be doing and what actions tend to work to do the most damage. From the rewards graph we see, that despite seeming to have learned to fight zombies and that bows are a faster way to hit them usually, the agent had not developed a strategy that would be effective at ensuring it killed every zombie. In conclusion, the agent seems to have learned that it needs to fight and that when it fights it needs prioritize particular enemies over others. It knows what it must do, but does not know exactly how it must do it.
+</p>
+
+<!-- <br> <br>
 <img src="images/reward_percentage_graphic1.jpg">
-<br> <br>
+<br> <br> -->
 
 ## Resources Used 
 - [Minecraft Wiki](https://minecraft.gamepedia.com/)
