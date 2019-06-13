@@ -81,6 +81,7 @@ We have set both our alpha and gamma to 1 as we were satisfied with the performa
     <li>Intent to attack a Villager: -0.1</li>
     <li>Changing targets: -2</li>
 </ul>
+<script src="https://gist.github.com/jeffomidvaran/2c8d78acb1e4788f563aaa5231ca787e.js"></script>
 
 
 <h4>Goal:</h4>
