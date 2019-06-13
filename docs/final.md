@@ -118,7 +118,7 @@ To evaluate if our agent is able to distinguish between which entities are dange
 
 <h4>Quantifying Combat Strategy</h4>
 <p>
-To see what type of strategy it was developing we kept track of which attacks it tried when trying to fight an entity and how often each attack was used. As we see it very strongly favors firing arrows at enemies, and learns to do so very quickly. It often would try shoot enemies from its spawn point to try and maximize its reward as much as possible. This is a very good strategy since the arrow allows for the agent to attack enemies much faster since it does not need them to get close to it to be able to fight them. The agent would get the most rewards whenever it would successfully hit an enemy and the bias towards long reach and fast engagement is appropriate for our task, especially since the agent is very often attacking from behind the barrier (when sword swipes are often ineffective).  
+To see what type of strategy it was developing we kept track of which attacks it tried when trying to fight an entity and how often each attack was used. As we see it very strongly favors firing arrows at enemies, and learns to do so very quickly. It often would try to shoot the enemies from its spawn point to try and maximize its reward as much as possible. This is a very good strategy since the arrow allows for the agent to attack enemies much faster since it does not need them to get close to it to be able to fight them. The agent would get the most rewards whenever it would successfully hit an enemy and the bias towards long reach and fast engagement is appropriate for our task, especially since the agent is very often attacking from behind the barrier (when sword swipes are often ineffective).  
 
 </p>
 <img src="images/Figure_2.jpg">
@@ -126,21 +126,21 @@ To see what type of strategy it was developing we kept track of which attacks it
 
 <h4>Quantifying Combat Effectiveness and Efficiency</h4>
 <p>
-To see if the agent was actually developing an effective strategy we plotted the total reward at the end of each mission. The agent was given +10 for damaging a zombie, +1 for damaging an enderman, -10 for damaging a villager, +.1 for trying to attack a zombie(but not necessarily damaging, +.01 for trying to attack an enderman, and -.1 for trying to attack a villager. As we can see from the graph, the agent does not converge on a particular value. This, however, doesn’t mean that the agent didn’t figure out which entities to target (and attack). It’s possible in some games that it attacked an enderman once and was killed, resulting in low reward. It’s also possible that in some of these games the agent ran out of time before being able to kill all the enemies.
+To see if the agent was actually developing an effective strategy we plotted the total reward at the end of each mission. The agent was given +10 for damaging a zombie, +1 for damaging an enderman, -10 for damaging a villager, +.1 for trying to attack a zombie (but not necessarily causing damage), +.01 for trying to attack an enderman, and -.1 for trying to attack a villager. As we can see from the graph, the agent does not converge on a particular value. This, however, doesn’t mean that the agent didn’t figure out which entities to target (and attack). It’s possible in some games that it attacked an enderman once and was killed, resulting in low reward. It’s also possible that in some of these games the agent ran out of time before being able to kill all the enemies.
 </p>
 <img src="images/Figure_3.jpg">
 
 $$ v $$ = number of attacks needed to kill villager * reward for hitting villager<br>
 $$ z $$ = number of attacks needed to kill zombie * reward for hitting zombie<br>
-$$ e $$ = number of attacks needed to kill Endermen * reward for hitting Endermen<br>
+$$ e $$ = number of attacks needed to kill endermen * reward for hitting endermen<br>
 
 $$ n_v = $$ total number of villagers<br>
 $$ n_z = $$ total number of zombies<br>
-$$ n_e = $$ total number of Endermen<br>
+$$ n_e = $$ total number of endermen<br>
 
 $$ n_{vk} = $$ total number of villagers killed<br>
 $$ n_{zk} = $$ total number of zombies killed<br>
-$$ n_{ek} = $$ total number of Endermen killed<br>
+$$ n_{ek} = $$ total number of endermen killed<br>
 
 $$ \text{successful reward percentage} = P =  \frac{|vn_v| + vn_{vk} + zn_{zk} + en_{ek}} {vn_{v} + zn_{z} + en_{e}} $$ 
 <br> 
