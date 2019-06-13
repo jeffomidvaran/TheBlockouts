@@ -47,7 +47,7 @@ We have set both our alpha and gamma to 1 as we were satisfied with the performa
 
 
 <!-- ENTERING CODE TEST  -->
-
+<script src="https://gist.github.com/jeffomidvaran/6b8de07446d51c77cbe3ed5e4053dee9.js"></script>
 
 
 <h4> Our states will consist of the following: </h4>
