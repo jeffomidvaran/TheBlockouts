@@ -20,8 +20,8 @@ While our agent can eventually implicitly differentiate between an enemy and goo
 <br><br>
 <img src="images/reinforcement_learning1.jpg">
 <br><br>
-<img src="images/markovtest.jpg">
-<br><br>
+<!-- <img src="images/markovtest.jpg">
+<br><br> -->
 
 
 Our update function is based on the Bellman Equation for Q learning. 
@@ -45,7 +45,7 @@ We have set both our alpha and gamma to 1 as we were satisfied with the performa
 
 
 <!-- ENTERING CODE TEST  -->
-<script src="https://gist.github.com/jeffomidvaran/6b8de07446d51c77cbe3ed5e4053dee9.js"></script>
+<script src="https://gist.github.com/jeffomidvaran/26d046921d2b7e894a3b2c2f9d78dbab.js"></script>
 
 
 <h4> Our states will consist of the following: </h4>
