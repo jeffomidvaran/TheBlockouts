@@ -16,7 +16,7 @@ While our agent can eventually implicitly differentiate between an enemy and goo
 
 
 ## Approach
-<br><br>
+<br>
 <img src="images/reinforcement_learning1.jpg">
 <br><br>
 <!-- <img src="images/markovtest.jpg">
