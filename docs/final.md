@@ -29,7 +29,7 @@ $$ \quad Q^\pi(s_t, a_t) = E[R_{t+1} + \gamma R_{t+2} +  \gamma^2 R_{t+3}... + [
 
 For our project we are implementing a q-tabular reinforcement learning system inspired by assignment_2. The table is implemented as a 2-level python dictionary for states-actions and their assigned reward; any unseen state will be initialized to 0. The update function for the q-table is as follows:
 
-$$ \text{old_q_value} + [$$\alpha \times $$ (\text{current_reward} + $$\gamma \times$$ \text{max_q_value_for_state_x} - \text{old_q_value})] $$
+$$ \text{old_q_value} + [\alpha \times (\text{current_reward} + \gamma \times \text{max_q_value_for_state_x} - \text{old_q_value})] $$
 
 <strong>old_q_value</strong> represents the old value our function assigned to the previous state and action
 <br>
